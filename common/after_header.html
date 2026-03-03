@@ -1,0 +1,15 @@
+<script type="text/x-handlebars" data-template-name="/connectors/after-header/custom-banner">
+  {{#unless this.currentUser.staff}}
+    {{#if (eq this.router.currentRouteName "discovery.categories")}}
+      <div class="custom-banner" {{#if theme.settings.banner_image}}style="background-image: url({{theme-setting-uploads.banner_image}})"{{/if}}>
+        <div class="custom-banner__content">
+          <h1>{{theme.settings.banner_title}}</h1>
+          <p>{{theme.settings.banner_subtitle}}</p>
+          <div class="custom-banner__search">
+            <input type="text" placeholder="Search topics..." onfocus="window.location.href='/search'" readonly />
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  {{/unless}}
+</script>

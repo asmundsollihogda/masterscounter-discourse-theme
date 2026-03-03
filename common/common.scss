@@ -1,0 +1,579 @@
+/* === Master's Counter — Discourse Theme === */
+
+/* Typography — Apply Outfit font */
+html {
+  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --heading-font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header styling — clean white nav bar */
+.d-header-wrap .d-header {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Nav bar text matching main site */
+.d-header .auth-buttons .btn,
+.d-header .header-buttons .btn,
+.d-header .panel {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Logo text — match main site (font-weight: 800) */
+.d-header .title a,
+.d-header #site-text-logo {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #191919;
+  text-decoration: none;
+}
+
+/* Hide "Powered by Discourse" footer text */
+#below-footer-outlet,
+.footer-message,
+.custom-footer-content,
+#below-footer,
+.above-footer,
+.powered-by-discourse {
+  display: none !important;
+}
+
+/* Smaller, thinner, black header icons (search, hamburger, user) */
+.d-header-icons .d-icon,
+.d-header-icons svg,
+.d-header-icons .icon svg,
+.d-header .panel .d-icon,
+.d-header .panel svg.d-icon,
+.header-sidebar-toggle .d-icon,
+.header-sidebar-toggle svg {
+  color: #191919 !important;
+  fill: #191919 !important;
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 16px !important;
+}
+.d-header-icons .btn,
+.d-header-icons .icon,
+.header-sidebar-toggle button {
+  padding: 6px;
+  color: #191919 !important;
+}
+/* Force black on all header SVG icons */
+.d-header svg {
+  color: #191919 !important;
+  fill: #191919 !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+/* Force ALL header buttons and icons black */
+.d-header button,
+.d-header button svg,
+.d-header .btn svg,
+.header-sidebar-toggle button,
+.header-sidebar-toggle .btn-sidebar-toggle,
+.header-sidebar-toggle svg,
+.header-sidebar-toggle svg use {
+  color: #191919 !important;
+  fill: #191919 !important;
+}
+/* SVG icon sprite — force currentColor inheritance */
+.header-sidebar-toggle .svg-icon {
+  color: #191919 !important;
+  --primary-medium: #191919 !important;
+  --header_primary: #191919 !important;
+}
+.btn-sidebar-toggle .d-icon {
+  color: #191919 !important;
+  opacity: 1 !important;
+}
+
+/* Lighter font weights for headings and links */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+}
+
+/* H5 — small caps label style */
+h5 {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+}
+
+a {
+  font-weight: 400;
+}
+
+.topic-list .main-link a.title {
+  font-weight: 400;
+}
+
+.category-name {
+  font-weight: 500;
+}
+
+/* Pill-shaped buttons matching main site badge component */
+.btn {
+  border-radius: 9999px;
+  padding: 5px 15px;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.btn-primary,
+#reply-control .btn-primary {
+  background-color: #6bcdb6;
+  color: #191919;
+  border-radius: 9999px;
+  padding: 5px 15px;
+  border: none;
+}
+.btn-primary:hover,
+#reply-control .btn-primary:hover {
+  background-color: #5ab9a3;
+  color: #191919;
+}
+
+.btn-danger {
+  background-color: #dfb570;
+  color: #191919;
+  border-radius: 9999px;
+  padding: 5px 15px;
+  border: none;
+}
+.btn-danger:hover {
+  background-color: #d4a55e;
+  color: #191919;
+}
+
+/* Sign Up button — gold */
+.sign-up-button {
+  background-color: #dfb570 !important;
+  color: #191919 !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
+}
+
+/* Log In button — green */
+.login-button {
+  background-color: #6bcdb6 !important;
+  color: #191919 !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
+}
+
+/* Hide icons inside buttons (except header area icons) */
+#main-outlet .btn .d-icon,
+#main-outlet .btn svg.d-icon,
+#reply-control .btn .d-icon,
+#reply-control .btn svg.d-icon {
+  display: none !important;
+}
+
+/* Force black header icons (search, hamburger) */
+.d-header .d-icon,
+.d-header svg,
+.d-header-icons .d-icon,
+.d-header-icons svg,
+.header-sidebar-toggle .d-icon,
+.header-sidebar-toggle svg {
+  color: #191919 !important;
+  fill: #191919 !important;
+}
+
+/* Topic list refinements */
+.topic-list .topic-list-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Topic list header cells — h5 style */
+.topic-list .topic-list-header th,
+.topic-list .topic-list-header th button {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+}
+
+/* Topic list data cells (replies, views, activity) — h5 style */
+.topic-list td.num .number,
+.topic-list td.num .relative-date,
+.topic-list td.num a {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+}
+
+/* Category badges — plain text */
+.badge-category__wrapper .badge-category {
+  border-radius: 0;
+  padding: 0;
+}
+
+/* Category breadcrumb dropdowns — plain text style */
+.category-breadcrumb {
+  font-size: 0.875rem;
+}
+.category-drop .select-kit-header {
+  background: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 4px 8px;
+  box-shadow: none !important;
+}
+.category-drop .badge-category__wrapper {
+  font-weight: 400;
+}
+.category-drop .badge-category .emoji {
+  display: none !important;
+}
+.category-drop .badge-category::before {
+  display: none !important;
+}
+/* Hide colored dot/stripe on category badges */
+.badge-category__wrapper::before,
+.badge-category--style-emoji::before,
+.badge-category[style]::before {
+  display: none !important;
+}
+/* Arrow icon — smaller */
+.category-drop .angle-icon {
+  width: 12px !important;
+  height: 12px !important;
+  color: #7a7a7a !important;
+}
+
+/* Navigation — simple text breadcrumbs */
+.nav-pills > li > a {
+  background: none !important;
+  border: none !important;
+  border-radius: 0;
+  padding: 4px 8px;
+  color: #7a7a7a;
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+.nav-pills > li > a:hover {
+  background: none !important;
+  color: #191919;
+}
+.nav-pills > li > a.active {
+  background: none !important;
+  color: #191919;
+  font-weight: 500;
+  border-bottom: 2px solid #6bcdb6 !important;
+}
+
+/* Main content — centered, unaffected by sidebar */
+#main-outlet {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+#main-outlet-wrapper {
+  max-width: 1100px;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+}
+
+/* Header dropdown panel — warm cream background */
+.menu-panel.slide-in {
+  background-color: #f2f1ec;
+}
+
+/* Hamburger toggle — move to left side of header */
+.header-sidebar-toggle {
+  order: -10 !important;
+  margin-right: auto;
+}
+
+/* Hide sidebar icons */
+.sidebar-section-link-wrapper .sidebar-section-link-prefix {
+  display: none !important;
+}
+
+/* Lighter sidebar text */
+.sidebar-section-header-text,
+.sidebar-section-link-content-text {
+  font-weight: 400 !important;
+}
+
+/* Gold accents for admin/staff badges */
+.user-badge .badge-card .badge-icon {
+  color: #dfb570;
+}
+
+/* Refined card styling */
+.topic-body {
+  border-radius: 10px;
+}
+
+/* Input fields — pill shape */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+.select-kit .select-kit-header {
+  border-radius: 9999px;
+}
+
+textarea,
+.d-editor-textarea-wrapper {
+  border-radius: 10px;
+}
+
+/* All borders thin 1px */
+*,
+*::before,
+*::after {
+  border-width: 1px !important;
+}
+
+/* Footer / below content area */
+.custom-footer {
+  background-color: #f2f1ec;
+}
+
+/* Video Courses header button — positioned left of auth buttons */
+.mc-header-btn {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  background-color: #6bcdb6;
+  color: #fff !important;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  order: -1;
+  margin-right: 8px;
+}
+.mc-header-btn:hover {
+  opacity: 0.85;
+  color: #fff !important;
+}
+
+/* Hide emoji picker and emoji elements */
+.emoji-picker,
+.d-editor-button-bar .emoji,
+.discourse-reactions-picker {
+  display: none !important;
+}
+
+/* Hide emoji shortcodes in category names */
+.category-text-title .emoji,
+.badge-category .emoji,
+.category-name .emoji {
+  display: none;
+}
+
+/* Hide default Discourse welcome/search banner */
+.custom-search-banner-wrap,
+.search-banner,
+.homepage-hero,
+.category-list-header,
+#main-outlet > .container > .custom-search-banner,
+.wrap .homepage-welcome__section {
+  display: none !important;
+}
+
+/* Hide hero banner on login page */
+.login-page .custom-banner {
+  display: none !important;
+}
+
+/* Hero banner on homepage */
+.custom-banner {
+  background-size: cover;
+  background-position: center;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 24px 0;
+  border-radius: 0;
+  position: relative;
+}
+.custom-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.5), rgba(25, 25, 25, 0.7));
+}
+.custom-banner__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: #fff;
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 600px;
+}
+.custom-banner__content h1 {
+  color: #fff;
+  font-weight: 500;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+.custom-banner__content p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  margin: 0 0 20px 0;
+}
+
+/* Search bar inside hero banner */
+.custom-banner__search {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.custom-banner__search input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 1rem;
+  font-family: inherit;
+  color: #191919;
+  outline: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.custom-banner__search input::placeholder {
+  color: #7a7a7a;
+}
+
+/* === Site Footer (matching main site) === */
+.mc-footer {
+  background-color: #f2f1ec;
+  padding: 40px 20px;
+  font-family: inherit;
+}
+.mc-footer__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.mc-footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+@media (min-width: 768px) {
+  .mc-footer {
+    padding: 80px;
+  }
+  .mc-footer__top {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 40px;
+  }
+}
+.mc-footer__logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #282828;
+  margin: 0 0 10px 0;
+}
+.mc-footer__logo-jp {
+  color: #dfb570;
+  font-family: "Noto Sans JP", "Hiragino Sans", sans-serif;
+  letter-spacing: 0.1em;
+  margin-right: 0.5rem;
+}
+.mc-footer__tagline {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #282828;
+  margin: 0;
+}
+.mc-footer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 0;
+}
+@media (min-width: 768px) {
+  .mc-footer__nav {
+    flex-direction: row;
+    gap: 40px;
+    padding: 40px 0;
+  }
+}
+.mc-footer__col-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+  margin: 0 0 8px 0;
+}
+.mc-footer__nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.mc-footer__nav li {
+  margin-bottom: 6px;
+}
+.mc-footer__nav a {
+  color: #282828;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+.mc-footer__nav a:hover {
+  text-decoration: underline;
+}
+.mc-footer__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+}
+@media (min-width: 768px) {
+  .mc-footer__bottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.mc-footer__social {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media (min-width: 768px) {
+  .mc-footer__social {
+    flex-direction: row;
+    gap: 22px;
+  }
+}
+.mc-footer__social a {
+  color: #282828;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.mc-footer__social a:hover {
+  text-decoration: underline;
+}
+.mc-footer__copyright {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+  margin: 0;
+}

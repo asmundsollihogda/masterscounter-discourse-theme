@@ -1,0 +1,9 @@
+<script type="text/discourse-plugin" version="0.8">
+api.decorateWidget('header-buttons:before', helper => {
+  const siteUrl = settings.site_url || 'https://masterscounter.com';
+  return helper.h('a.mc-header-btn', {
+    href: siteUrl + '/courses',
+    attributes: { target: '_blank' }
+  }, 'Video Courses');
+});
+</script>

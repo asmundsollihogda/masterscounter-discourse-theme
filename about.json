@@ -1,0 +1,20 @@
+{
+  "name": "Masters Counter",
+  "about_url": "https://masterscounter.com",
+  "license_url": "https://masterscounter.com/terms",
+  "component": false,
+  "color_schemes": {
+    "Masters Counter": {
+      "primary": "191919",
+      "secondary": "ffffff",
+      "tertiary": "6bcdb6",
+      "quaternary": "dfb570",
+      "header_background": "ffffff",
+      "header_primary": "191919",
+      "highlight": "f2f1ec",
+      "danger": "e74c3c",
+      "success": "1ac099",
+      "love": "dfb570"
+    }
+  }
+}

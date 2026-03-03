@@ -1,0 +1,19 @@
+banner_title:
+  type: string
+  default: "Master's Counter — Sushi Society"
+  description: "Hero banner heading text"
+
+banner_subtitle:
+  type: string
+  default: "The community for culinary professionals"
+  description: "Hero banner subtitle text"
+
+banner_image:
+  type: upload
+  default: ""
+  description: "Hero banner background image (recommended 2000px wide)"
+
+site_url:
+  type: string
+  default: "https://masterscounter.com"
+  description: "Main site URL for footer links and Video Courses button"
