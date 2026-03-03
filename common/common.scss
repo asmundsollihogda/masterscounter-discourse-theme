@@ -386,7 +386,7 @@ textarea,
   display: none !important;
 }
 
-/* Hero banner on homepage */
+/* Hero banner on homepage — full width on all devices */
 .custom-banner {
   background-size: cover;
   background-position: center;
@@ -397,6 +397,8 @@ textarea,
   margin: 0 0 24px 0;
   border-radius: 0;
   position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 .custom-banner::after {
   content: '';
@@ -452,12 +454,13 @@ textarea,
 /* === Site Footer (matching main site) === */
 .mc-footer {
   background-color: #f2f1ec;
-  padding: 40px 20px;
+  padding: 40px 0;
   font-family: inherit;
 }
 .mc-footer__inner {
   max-width: 1100px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 .mc-footer__top {
   display: flex;
@@ -468,7 +471,7 @@ textarea,
 }
 @media (min-width: 768px) {
   .mc-footer {
-    padding: 80px;
+    padding: 80px 0;
   }
   .mc-footer__top {
     flex-direction: row;
