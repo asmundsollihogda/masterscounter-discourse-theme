@@ -402,6 +402,7 @@ textarea,
 
 /* Hero banner on homepage */
 .custom-banner {
+  background-image: url($hero-banner);
   background-size: cover;
   background-position: center;
   min-height: 300px;
