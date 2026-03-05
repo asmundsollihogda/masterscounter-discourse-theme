@@ -3,6 +3,9 @@
   "about_url": "https://masterscounter.com",
   "license_url": "https://masterscounter.com/terms",
   "component": false,
+  "assets": {
+    "hero-banner": "assets/hero-banner.jpg"
+  },
   "color_schemes": {
     "Masters Counter": {
       "primary": "191919",
