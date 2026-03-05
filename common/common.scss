@@ -511,13 +511,13 @@ textarea,
   margin: 0;
 }
 .mc-footer__kamon {
-  width: auto;
-  height: 100%;
+  width: 60px;
+  height: 60px;
   background-image: url($kamon-logo);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  min-width: 50px;
+  flex-shrink: 0;
   display: none;
 }
 @media (min-width: 768px) {
