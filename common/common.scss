@@ -1,4 +1,6 @@
 /* === Master's Counter — Discourse Theme === */
+/* Reference copy for version control.                          */
+/* Apply via: Admin → Customize → Themes → [theme] → Edit CSS  */
 
 /* Typography — Apply Outfit font */
 html {
@@ -111,6 +113,16 @@ a {
 
 .category-name {
   font-weight: 500;
+}
+
+/* Remove outline on hover/focus for nav buttons */
+.d-header .btn:hover,
+.d-header .btn:focus,
+.d-header-icons .btn:hover,
+.d-header-icons .btn:focus,
+.header-sidebar-toggle button:hover,
+.header-sidebar-toggle button:focus {
+  outline: none !important;
 }
 
 /* Pill-shaped buttons matching main site badge component */
@@ -257,9 +269,11 @@ a {
   font-weight: 400;
   font-size: 0.875rem;
 }
-.nav-pills > li > a:hover {
+.nav-pills > li > a:hover,
+.nav-pills > li > a:focus {
   background: none !important;
   color: #191919;
+  outline: none !important;
 }
 .nav-pills > li > a.active {
   background: none !important;
@@ -386,7 +400,7 @@ textarea,
   display: none !important;
 }
 
-/* Hero banner on homepage — full width on all devices */
+/* Hero banner on homepage */
 .custom-banner {
   background-size: cover;
   background-position: center;
@@ -397,8 +411,6 @@ textarea,
   margin: 0 0 24px 0;
   border-radius: 0;
   position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
 }
 .custom-banner::after {
   content: '';
@@ -454,13 +466,12 @@ textarea,
 /* === Site Footer (matching main site) === */
 .mc-footer {
   background-color: #f2f1ec;
-  padding: 40px 0;
+  padding: 40px 20px;
   font-family: inherit;
 }
 .mc-footer__inner {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 .mc-footer__top {
   display: flex;
@@ -471,7 +482,7 @@ textarea,
 }
 @media (min-width: 768px) {
   .mc-footer {
-    padding: 80px 0;
+    padding: 80px;
   }
   .mc-footer__top {
     flex-direction: row;
@@ -500,7 +511,10 @@ textarea,
 }
 .mc-footer__kamon {
   height: 50px;
-  width: auto;
+  width: 50px;
+  background-image: url($kamon-logo);
+  background-size: contain;
+  background-repeat: no-repeat;
   display: none;
 }
 @media (min-width: 768px) {
