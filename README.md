@@ -10,29 +10,48 @@ Custom Discourse theme for the [Master's Counter](https://masterscounter.com) co
 4. Click **Install**
 5. Set as **default theme**
 6. Select the "Masters Counter" color scheme
+7. Attach Google Fonts component as child theme (see below)
 
 ### Required component
 
 Install the [Discourse Google Font Component](https://github.com/discourse/discourse-google-font-component) and configure it with **Outfit** for both body and headline fonts. Add it as a child component of this theme.
 
-### Hero banner image
-
-1. Go to **Admin → Customize → Themes → Masters Counter**
-2. Under **Theme Settings**, upload a hero banner image (recommended 2000px wide)
-3. Set banner title and subtitle as desired
-
 ## Structure
 
 ```
-about.json              Theme metadata + color scheme
+about.json              Theme metadata + color scheme + asset declarations
 common/
-  common.scss           All custom CSS
+  common.scss           All custom CSS (includes asset references via SCSS variables)
   head_tag.html         Video Courses header button (JS widget)
   after_header.html     Hero banner with search
   body_tag.html         Site footer
 assets/
-  hero-banner.jpg       Default banner image
+  hero-banner.jpg       Banner background image (2000px wide)
+  kamon-logo.svg        Kamon logo for footer
 settings.yml            Configurable theme settings
+```
+
+## Theme Assets
+
+Assets declared in `about.json` under `"assets"` are uploaded to Discourse and available as SCSS variables:
+
+| Asset | SCSS variable | Used in |
+|-------|--------------|---------|
+| `hero-banner.jpg` | `$hero-banner` | `.custom-banner` background |
+| `kamon-logo.svg` | `$kamon-logo` | `.mc-footer__kamon` background |
+
+**Important:** `{{theme-uploads.name}}` does NOT work in HTML files (`after_header.html`, `body_tag.html`). Always reference assets via SCSS `$variable` in `common.scss`.
+
+## Deploying
+
+From the main `chefacademy` repo:
+
+```bash
+# One command: commit, push, pull on server, clear cache
+./server/discourse/update-theme.sh "Your commit message"
+
+# Or deploy-only (if already pushed)
+./server/discourse/update-theme.sh --deploy-only
 ```
 
 ## Theme Settings
@@ -43,14 +62,6 @@ settings.yml            Configurable theme settings
 | `banner_subtitle` | The community for culinary professionals | Hero banner subtitle |
 | `banner_image` | (upload) | Hero banner background image |
 | `site_url` | https://masterscounter.com | Main site URL for links |
-
-## Updating
-
-After pushing changes to this repo:
-1. Go to **Admin → Customize → Themes → Masters Counter**
-2. Click **Check for Updates**
-
-Or configure a webhook for automatic updates.
 
 ## Color Scheme
 
