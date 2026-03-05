@@ -4,7 +4,8 @@
   "license_url": "https://masterscounter.com/terms",
   "component": false,
   "assets": {
-    "hero-banner": "assets/hero-banner.jpg"
+    "hero-banner": "assets/hero-banner.jpg",
+    "kamon-logo": "assets/kamon-logo.svg"
   },
   "color_schemes": {
     "Masters Counter": {
