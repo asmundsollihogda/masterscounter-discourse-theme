@@ -282,6 +282,14 @@ a {
   border-bottom: 2px solid #6bcdb6 !important;
 }
 
+/* Fix sidebar stretching page — default is 100dvh which pushes footer off screen */
+.sidebar-wrapper {
+  height: auto !important;
+}
+.mc-footer {
+  border-top: 5px solid red !important;
+}
+
 /* Main content — centered, unaffected by sidebar */
 #main-outlet {
   padding-top: 0 !important;

@@ -48,3 +48,19 @@
     </div>
   </div>
 </div>
+<script>
+(function() {
+  function moveFooter() {
+    var footer = document.querySelector('.mc-footer');
+    var root = document.querySelector('.discourse-root');
+    if (root && footer && !root.contains(footer)) {
+      root.appendChild(footer);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', moveFooter);
+  } else {
+    moveFooter();
+  }
+})();
+</script>

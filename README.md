@@ -42,15 +42,59 @@ Assets declared in `about.json` under `"assets"` are uploaded to Discourse and a
 
 **Important:** `{{theme-uploads.name}}` does NOT work in HTML files (`after_header.html`, `body_tag.html`). Always reference assets via SCSS `$variable` in `common.scss`.
 
-## Deploying
+## Local Development (discourse_theme watch)
 
-From the main `chefacademy` repo:
+Uses the official `discourse_theme` CLI to sync local theme files to a running Discourse instance via API.
+
+**Prerequisites (one-time):**
+```bash
+brew install ruby
+gem install discourse_theme
+```
+
+**Start local Discourse (from `chefacademy` repo):**
+```bash
+cd server/discourse && docker compose -f docker-compose.local.yml up -d
+# First run: ~15 min (clone, bundle, migrate). Subsequent starts: ~2 min.
+# Access: http://localhost:4200
+# Login: asmund@asmundsollihogda.se / admin12345 (auto-created on first run)
+```
+
+**Start theme watcher (separate terminal):**
+```bash
+./server/discourse/watch-theme.sh
+# First run prompts for:
+#   - Discourse URL: http://localhost:4200
+#   - API key: create at http://localhost:4200/admin/api/keys (Global, Single User: admin)
+# Select "Create and sync with a new theme" when prompted
+# Credentials stored in ~/.discourse_theme (not in repo)
+```
+
+**Edit theme files → changes sync automatically → refresh browser.**
+
+**After a full reset (`down -v`):**
+1. Start containers, wait for startup
+2. Log in, create new API key
+3. Run `./server/discourse/watch-theme.sh` (or with `--reset` to re-enter credentials)
+
+**Stop:**
+```bash
+cd server/discourse && docker compose -f docker-compose.local.yml down
+```
+
+**Notes:**
+- Google Fonts won't render locally (no component installed), but font fallbacks work for CSS development.
+- If API key is lost after reset, generate a new one and run `discourse_theme watch --reset`.
+
+## Deploy to Production
+
+When local looks good, deploy in one step from the `chefacademy` repo:
 
 ```bash
-# One command: commit, push, pull on server, clear cache
+# Commit, push, pull on server, clear cache
 ./server/discourse/update-theme.sh "Your commit message"
 
-# Or deploy-only (if already pushed)
+# Or if already pushed:
 ./server/discourse/update-theme.sh --deploy-only
 ```
 
