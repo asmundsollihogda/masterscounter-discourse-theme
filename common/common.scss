@@ -8,7 +8,24 @@ html {
   --heading-font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Header styling — clean white nav bar */
+/* Header styling — title left, buttons right */
+.d-header .wrap {
+  max-width: 100% !important;
+}
+.d-header .contents {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  justify-content: flex-start !important;
+}
+.d-header .contents > .title {
+  flex: 0 0 auto !important;
+}
+.d-header .contents > .panel {
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+}
 .d-header-wrap .d-header {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
@@ -167,12 +184,16 @@ a {
   font-size: 1rem !important;
 }
 
-/* Log In button — green */
+/* Log In button — green, no icon */
 .login-button {
   background-color: #6bcdb6 !important;
   color: #191919 !important;
   font-weight: 400 !important;
   font-size: 1rem !important;
+}
+.login-button .d-icon,
+.login-button svg {
+  display: none !important;
 }
 
 /* Hide icons inside buttons (except header area icons) */
@@ -307,7 +328,7 @@ a {
 /* Hamburger toggle — move to left side of header */
 .header-sidebar-toggle {
   order: -10 !important;
-  margin-right: auto;
+  margin-right: 0 !important;
 }
 
 /* Hide sidebar icons */
@@ -417,6 +438,8 @@ textarea,
   margin: 0 0 24px 0;
   border-radius: 0;
   position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
 }
 .custom-banner::after {
   content: '';
