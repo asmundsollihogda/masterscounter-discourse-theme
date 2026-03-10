@@ -42,13 +42,18 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
 
-/* Logo text — match main site (font-weight: 800) */
+/* Logo text — match main site header__logo exactly */
 .d-header .title a,
 .d-header #site-text-logo {
   font-size: 1rem;
-  font-weight: 800;
   color: #191919;
   text-decoration: none;
+  letter-spacing: normal;
+}
+/* Hide logo image if one exists, force text logo */
+.d-header .logo-big,
+.d-header .logo-small {
+  display: none !important;
 }
 
 /* Hide "Powered by Discourse" footer text */
@@ -334,12 +339,31 @@ h3.latest-topic-list-header,
   border-bottom: 2px solid #6bcdb6 !important;
 }
 
-/* Fix sidebar stretching page — default is 100dvh which pushes footer off screen */
+/* Sidebar — slide over content, don't push it */
 .sidebar-wrapper {
-  height: auto !important;
-  z-index: 999 !important;
-  position: relative !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100vh !important;
+  z-index: 1000 !important;
   background: #fff !important;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  padding-top: 60px !important;
+  width: 280px !important;
+}
+.has-sidebar-page .sidebar-wrapper {
+  transform: translateX(0);
+}
+/* Prevent main content from shifting when sidebar opens */
+#main-outlet-wrapper,
+#main-outlet {
+  transition: none !important;
+}
+.has-sidebar-page #main-outlet-wrapper {
+  margin-left: 0 !important;
+  width: 100% !important;
 }
 
 /* Main content — centered, unaffected by sidebar */
