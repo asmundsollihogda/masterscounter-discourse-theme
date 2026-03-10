@@ -13,6 +13,7 @@ api.decorateWidget('header-buttons:before', helper => {
 </script>
 
 <script>
+// Close sidebar on clicking outside
 document.addEventListener('click', function(e) {
   const body = document.body;
   if (!body.classList.contains('has-sidebar-page')) return;
@@ -21,5 +22,18 @@ document.addEventListener('click', function(e) {
     const toggleBtn = document.querySelector('.header-sidebar-toggle button');
     if (toggleBtn) toggleBtn.click();
   }
+});
+
+// Move banner outside main-outlet-wrapper for full-width
+document.addEventListener('DOMContentLoaded', function() {
+  const observer = new MutationObserver(function() {
+    const banner = document.querySelector('.custom-banner');
+    const header = document.querySelector('.d-header-wrap');
+    if (banner && header && banner.closest('#main-outlet-wrapper')) {
+      header.after(banner);
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
 });
 </script>
