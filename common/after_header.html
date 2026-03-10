@@ -3,7 +3,9 @@
     <h1>Master's Counter — Sushi Society</h1>
     <p>The community for culinary professionals</p>
     <div class="custom-banner__search">
-      <input type="text" placeholder="Search topics..." onfocus="window.location.href='/search'" readonly />
+      <form action="/search" method="get">
+        <input type="text" name="q" placeholder="Search topics..." autocomplete="off" />
+      </form>
     </div>
   </div>
 </div>
