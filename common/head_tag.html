@@ -2,17 +2,25 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script type="text/discourse-plugin" version="0.8">
-api.decorateWidget('header-buttons:before', helper => {
-  const siteUrl = settings.site_url || 'https://masterscounter.com';
-  return helper.h('a.mc-header-btn', {
-    href: siteUrl + '/courses',
-    attributes: { target: '_blank' }
-  }, 'Video Courses');
-});
-</script>
-
 <script>
+// Add Video Courses button to header
+function addCoursesButton() {
+  const panel = document.querySelector('.d-header .panel');
+  if (panel && !document.querySelector('.mc-header-btn')) {
+    const btn = document.createElement('a');
+    btn.className = 'mc-header-btn';
+    btn.href = 'https://masterscounter.com/courses';
+    btn.target = '_blank';
+    btn.textContent = 'Video Courses';
+    panel.prepend(btn);
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  const observer = new MutationObserver(addCoursesButton);
+  observer.observe(document.body, { childList: true, subtree: true });
+  addCoursesButton();
+});
+
 // Close sidebar on clicking outside
 document.addEventListener('click', function(e) {
   const body = document.body;

@@ -116,9 +116,29 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 1 !important;
 }
 
-/* Lighter font weights for headings and links */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 500;
+/* All content: weight 400, max font-size 16px (except header and footer) */
+#main-outlet,
+#main-outlet * {
+  font-weight: 400 !important;
+  font-size: clamp(0px, 1em, 16px) !important;
+}
+/* thead — H5 style */
+#main-outlet thead th,
+#main-outlet thead th span,
+#main-outlet thead th button {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: #7a7a7a !important;
+}
+/* Table headings — H5 style */
+#main-outlet .table-heading {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: #7a7a7a !important;
 }
 
 /* H5 — small caps label style */
@@ -478,24 +498,30 @@ textarea,
   background-color: #f2f1ec;
 }
 
-/* Video Courses header button — positioned left of auth buttons */
+/* Video Courses header button — match Log In button style */
+.d-header .panel .mc-header-btn,
+a.mc-header-btn,
 .mc-header-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: 6px 16px;
-  background-color: #6bcdb6;
-  color: #fff !important;
+  justify-content: center;
+  padding: 5px 15px;
+  background-color: #6bcdb6 !important;
+  color: #191919 !important;
+  -webkit-text-fill-color: #191919 !important;
   border-radius: 9999px;
-  font-weight: 500;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: opacity 0.2s;
+  font-weight: 400;
+  font-size: 1rem;
+  text-decoration: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
   order: -1;
   margin-right: 8px;
 }
 .mc-header-btn:hover {
   opacity: 0.85;
-  color: #fff !important;
+  color: #191919 !important;
 }
 
 /* Hide emoji picker and emoji elements */
