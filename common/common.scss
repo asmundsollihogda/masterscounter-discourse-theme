@@ -234,11 +234,11 @@ a {
   display: none !important;
 }
 
-/* Hide icons inside buttons (except header area icons) */
-#main-outlet .btn .d-icon,
-#main-outlet .btn svg.d-icon,
-#reply-control .btn .d-icon,
-#reply-control .btn svg.d-icon {
+/* Hide icons inside buttons that have text (keep icon-only buttons) */
+#main-outlet .btn:not(.no-text) .d-icon,
+#main-outlet .btn:not(.no-text) svg.d-icon,
+#reply-control .btn:not(.no-text) .d-icon,
+#reply-control .btn:not(.no-text) svg.d-icon {
   display: none !important;
 }
 
@@ -522,6 +522,11 @@ a.mc-header-btn,
 .mc-header-btn:hover {
   opacity: 0.85;
   color: #191919 !important;
+}
+
+/* Hide bulk select button */
+.bulk-select {
+  display: none !important;
 }
 
 /* Hide emoji picker and emoji elements */
