@@ -11,3 +11,15 @@ api.decorateWidget('header-buttons:before', helper => {
   }, 'Video Courses');
 });
 </script>
+
+<script>
+document.addEventListener('click', function(e) {
+  const body = document.body;
+  if (!body.classList.contains('has-sidebar-page')) return;
+  const sidebar = document.querySelector('.sidebar-wrapper');
+  if (sidebar && !sidebar.contains(e.target) && !e.target.closest('.header-sidebar-toggle')) {
+    const toggleBtn = document.querySelector('.header-sidebar-toggle button');
+    if (toggleBtn) toggleBtn.click();
+  }
+});
+</script>

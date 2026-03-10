@@ -46,6 +46,7 @@ h1, h2, h3, h4, h5, h6 {
 .d-header .title a,
 .d-header #site-text-logo {
   font-size: 1rem;
+  font-weight: 600 !important;
   color: #191919;
   text-decoration: none;
   letter-spacing: normal;
@@ -193,12 +194,20 @@ a {
   font-size: 1rem !important;
 }
 
-/* Log In button — green, no icon */
+/* Log In button — match main site .badge--primary */
 .login-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   background-color: #6bcdb6 !important;
-  color: #191919 !important;
-  font-weight: 400 !important;
+  color: #282828 !important;
+  font-family: inherit !important;
   font-size: 1rem !important;
+  font-weight: 400 !important;
+  padding: 5px 15px !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  text-decoration: none !important;
 }
 .login-button .d-icon,
 .login-button svg {
@@ -345,7 +354,7 @@ h3.latest-topic-list-header,
   top: 60px !important;
   left: 0 !important;
   height: calc(100vh - 60px) !important;
-  z-index: 999 !important;
+  z-index: 99 !important;
   background: #fff !important;
   box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
   transform: translateX(-100%);
@@ -358,12 +367,44 @@ h3.latest-topic-list-header,
 }
 /* Prevent main content from shifting when sidebar opens */
 #main-outlet-wrapper,
-#main-outlet {
+#main-outlet,
+.d-header .wrap,
+.sidebar-wrapper + * {
   transition: none !important;
 }
+#main-outlet-wrapper,
 .has-sidebar-page #main-outlet-wrapper {
+  display: block !important;
   margin-left: 0 !important;
   width: 100% !important;
+  max-width: 100% !important;
+}
+.has-sidebar-page #main-outlet,
+#main-outlet {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+.has-sidebar-page .d-header .wrap {
+  padding-left: initial !important;
+}
+/* Dark overlay on content when sidebar is open */
+#main-outlet-wrapper::before {
+  content: '' !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0) !important;
+  z-index: 98 !important;
+  pointer-events: none !important;
+  transition: background 0.25s ease !important;
+}
+.has-sidebar-page #main-outlet-wrapper::before {
+  background: rgba(0, 0, 0, 0.4) !important;
+  pointer-events: auto !important;
 }
 
 /* Main content — centered, unaffected by sidebar */
