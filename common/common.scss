@@ -2,10 +2,14 @@
 /* Reference copy for version control.                          */
 /* Apply via: Admin → Customize → Themes → [theme] → Edit CSS  */
 
-/* Typography — Apply Outfit font */
-html {
-  --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --heading-font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* Typography — Load and apply Outfit font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 /* Header styling — title left, buttons right */
@@ -241,6 +245,33 @@ a {
   color: #7a7a7a;
 }
 
+/* Categories table headers — match topic list h5 style */
+.category-list th,
+.category-list .latest-topic-list h3,
+.category-list .category-list__header,
+.categories-boxes-container th,
+table.category-list thead th,
+.categories-list h3,
+.latest-topic-list-item h3,
+h3.latest-topic-list-header,
+.category-list .latest-topic-list-header {
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #7a7a7a !important;
+}
+
+/* Categories table numbers (topic counts) — match topic list style */
+.category-list td .value,
+.category-list td.num,
+.category-list td.topics,
+.category-list td.latest {
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: #7a7a7a !important;
+}
+
 /* Category badges — plain text */
 .badge-category__wrapper .badge-category {
   border-radius: 0;
@@ -306,6 +337,9 @@ a {
 /* Fix sidebar stretching page — default is 100dvh which pushes footer off screen */
 .sidebar-wrapper {
   height: auto !important;
+  z-index: 999 !important;
+  position: relative !important;
+  background: #fff !important;
 }
 
 /* Main content — centered, unaffected by sidebar */
