@@ -32,6 +32,21 @@ document.addEventListener('click', function(e) {
   }
 });
 
+// Move hamburger to far left of header on mobile
+function moveHamburger() {
+  if (window.innerWidth >= 768) return;
+  const contents = document.querySelector('.d-header .contents');
+  const hamburger = document.querySelector('.d-header .hamburger-dropdown');
+  if (contents && hamburger && hamburger.parentElement !== contents) {
+    contents.prepend(hamburger);
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  const obs = new MutationObserver(moveHamburger);
+  obs.observe(document.body, { childList: true, subtree: true });
+  moveHamburger();
+});
+
 // Move banner outside main-outlet-wrapper for full-width
 document.addEventListener('DOMContentLoaded', function() {
   const observer = new MutationObserver(function() {

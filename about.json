@@ -5,7 +5,8 @@
   "component": false,
   "assets": {
     "hero-banner": "assets/hero-banner.jpg",
-    "kamon-logo": "assets/kamon-logo.svg"
+    "kamon-logo": "assets/kamon-logo.svg",
+    "sushisociety-logo": "assets/sushisociety-logo.svg"
   },
   "color_schemes": {
     "Masters Counter": {
