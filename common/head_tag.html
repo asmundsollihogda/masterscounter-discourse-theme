@@ -3,22 +3,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script>
-// Add Video Courses button to header
-function addCoursesButton() {
+// Add main site nav links to header
+function addHeaderLinks() {
   const panel = document.querySelector('.d-header .panel');
-  if (panel && !document.querySelector('.mc-header-btn')) {
-    const btn = document.createElement('a');
-    btn.className = 'mc-header-btn';
-    btn.href = 'https://masterscounter.com/courses';
-    btn.target = '_blank';
-    btn.textContent = 'Video Courses';
-    panel.prepend(btn);
+  if (panel && !document.querySelector('.mc-header-nav')) {
+    const nav = document.createElement('div');
+    nav.className = 'mc-header-nav';
+
+    const links = [
+      { text: 'Courses', href: 'https://masterscounter.com/courses' },
+      { text: 'Account', href: 'https://masterscounter.com/account' }
+    ];
+
+    links.forEach(function(link) {
+      const a = document.createElement('a');
+      a.className = 'mc-header-link';
+      a.href = link.href;
+      a.textContent = link.text;
+      nav.appendChild(a);
+    });
+
+    panel.prepend(nav);
   }
 }
 document.addEventListener('DOMContentLoaded', function() {
-  const observer = new MutationObserver(addCoursesButton);
+  const observer = new MutationObserver(addHeaderLinks);
   observer.observe(document.body, { childList: true, subtree: true });
-  addCoursesButton();
+  addHeaderLinks();
 });
 
 // Close sidebar on clicking outside
@@ -47,13 +58,16 @@ document.addEventListener('DOMContentLoaded', function() {
   moveHamburger();
 });
 
-// Move banner outside main-outlet-wrapper for full-width
+// Move purpose bar and banner outside main-outlet-wrapper for full-width
 document.addEventListener('DOMContentLoaded', function() {
   const observer = new MutationObserver(function() {
     const banner = document.querySelector('.custom-banner');
+    const purposeBar = document.querySelector('.custom-purpose-bar');
     const header = document.querySelector('.d-header-wrap');
     if (banner && header && banner.closest('#main-outlet-wrapper')) {
-      header.after(banner);
+      if (purposeBar) header.after(purposeBar);
+      const insertAfter = purposeBar || header;
+      insertAfter.after(banner);
       observer.disconnect();
     }
   });
