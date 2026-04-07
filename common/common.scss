@@ -461,6 +461,11 @@ h3.latest-topic-list-header,
 .category-boxes__title {
   text-transform: none !important;
 }
+/* Hide restricted categories from homepage boxes */
+.category-box-paid-members,
+.category-box-admin {
+  display: none !important;
+}
 
 /* Category badges — plain text */
 .badge-category__wrapper .badge-category {
