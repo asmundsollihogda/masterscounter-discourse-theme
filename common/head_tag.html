@@ -5,40 +5,37 @@
 <script>
 // Add main site nav links to header
 function addHeaderLinks() {
-  const panel = document.querySelector('.d-header .panel');
+  var panel = document.querySelector('.d-header .panel');
   if (panel && !document.querySelector('.mc-header-nav')) {
-    const nav = document.createElement('div');
+    var nav = document.createElement('div');
     nav.className = 'mc-header-nav';
-
-    const links = [
+    var links = [
       { text: 'Courses', href: 'https://masterscounter.com/courses' },
       { text: 'Account', href: 'https://masterscounter.com/account' }
     ];
-
     links.forEach(function(link) {
-      const a = document.createElement('a');
+      var a = document.createElement('a');
       a.className = 'mc-header-link';
       a.href = link.href;
       a.textContent = link.text;
       nav.appendChild(a);
     });
-
     panel.prepend(nav);
   }
 }
 document.addEventListener('DOMContentLoaded', function() {
-  const observer = new MutationObserver(addHeaderLinks);
+  var observer = new MutationObserver(addHeaderLinks);
   observer.observe(document.body, { childList: true, subtree: true });
   addHeaderLinks();
 });
 
 // Close sidebar on clicking outside
 document.addEventListener('click', function(e) {
-  const body = document.body;
+  var body = document.body;
   if (!body.classList.contains('has-sidebar-page')) return;
-  const sidebar = document.querySelector('.sidebar-wrapper');
+  var sidebar = document.querySelector('.sidebar-wrapper');
   if (sidebar && !sidebar.contains(e.target) && !e.target.closest('.header-sidebar-toggle')) {
-    const toggleBtn = document.querySelector('.header-sidebar-toggle button');
+    var toggleBtn = document.querySelector('.header-sidebar-toggle button');
     if (toggleBtn) toggleBtn.click();
   }
 });
@@ -46,31 +43,378 @@ document.addEventListener('click', function(e) {
 // Move hamburger to far left of header on mobile
 function moveHamburger() {
   if (window.innerWidth >= 768) return;
-  const contents = document.querySelector('.d-header .contents');
-  const hamburger = document.querySelector('.d-header .hamburger-dropdown');
+  var contents = document.querySelector('.d-header .contents');
+  var hamburger = document.querySelector('.d-header .hamburger-dropdown');
   if (contents && hamburger && hamburger.parentElement !== contents) {
     contents.prepend(hamburger);
   }
 }
 document.addEventListener('DOMContentLoaded', function() {
-  const obs = new MutationObserver(moveHamburger);
+  var obs = new MutationObserver(moveHamburger);
   obs.observe(document.body, { childList: true, subtree: true });
   moveHamburger();
 });
 
-// Move purpose bar and banner outside main-outlet-wrapper for full-width
+// Move welcome banner and hero banner outside main-outlet-wrapper for full-width
 document.addEventListener('DOMContentLoaded', function() {
-  const observer = new MutationObserver(function() {
-    const banner = document.querySelector('.custom-banner');
-    const purposeBar = document.querySelector('.custom-purpose-bar');
-    const header = document.querySelector('.d-header-wrap');
+  var observer = new MutationObserver(function() {
+    var banner = document.querySelector('.custom-banner');
+    var welcomeBanner = document.querySelector('.mc-welcome-banner');
+    var homepage = document.querySelector('#mc-custom-homepage');
+    var header = document.querySelector('.d-header-wrap');
     if (banner && header && banner.closest('#main-outlet-wrapper')) {
-      if (purposeBar) header.after(purposeBar);
-      const insertAfter = purposeBar || header;
+      if (welcomeBanner) header.after(welcomeBanner);
+      var insertAfter = welcomeBanner || header;
       insertAfter.after(banner);
+      if (homepage) banner.after(homepage);
       observer.disconnect();
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
 });
+
+// Dismiss welcome banner — check localStorage + wire up close button
+document.addEventListener('DOMContentLoaded', function() {
+  if (localStorage.getItem('mc-welcome-dismissed') === '1') {
+    var wb = document.getElementById('mc-welcome-banner');
+    if (wb) wb.style.display = 'none';
+  }
+
+  function wireDismiss() {
+    var btn = document.getElementById('mc-welcome-dismiss');
+    if (btn && !btn._wired) {
+      btn._wired = true;
+      btn.addEventListener('click', function() {
+        var banner = document.getElementById('mc-welcome-banner');
+        if (banner) banner.style.display = 'none';
+        localStorage.setItem('mc-welcome-dismissed', '1');
+      });
+    }
+  }
+  wireDismiss();
+  var dismissObs = new MutationObserver(wireDismiss);
+  dismissObs.observe(document.body, { childList: true, subtree: true });
+});
+
+// === Custom Homepage Builder ===
+// Hides default Discourse categories on homepage and builds custom layout
+// with: Featured Topics, Categories + Community Activity, Top Contributors
+
+var MC_HIDDEN_CATEGORIES = ['paid-members', 'admin'];
+
+function mcIsHomepage() {
+  var path = window.location.pathname;
+  return path === '/' || path === '/categories';
+}
+
+function mcTimeAgo(dateStr) {
+  var diff = Date.now() - new Date(dateStr).getTime();
+  var mins = Math.floor(diff / 60000);
+  if (mins < 60) return mins + 'm';
+  var hours = Math.floor(mins / 60);
+  if (hours < 24) return hours + 'h';
+  var days = Math.floor(hours / 24);
+  return days + 'd';
+}
+
+function mcBuildFeaturedTopics(topics) {
+  if (!topics || topics.length === 0) return '';
+  var cards = topics.slice(0, 3).map(function(t) {
+    var imageUrl = t.image_url || '';
+    var imageHtml = imageUrl
+      ? '<div class="mc-featured__img" style="background-image:url(' + imageUrl + ')"></div>'
+      : '<div class="mc-featured__img mc-featured__img--empty"></div>';
+    return '<a href="/t/' + t.slug + '/' + t.id + '" class="mc-featured__card">' +
+      imageHtml +
+      '<div class="mc-featured__title">' + t.title + '</div>' +
+    '</a>';
+  }).join('');
+
+  return '<div class="mc-featured">' +
+    '<div class="mc-featured__grid">' + cards + '</div>' +
+  '</div>';
+}
+
+function mcBuildCategories(categories) {
+  var filtered = categories.filter(function(c) {
+    return MC_HIDDEN_CATEGORIES.indexOf(c.slug) === -1;
+  });
+
+  var items = filtered.map(function(c) {
+    var latestTitle = '';
+    if (c.topic_list && c.topic_list.topics && c.topic_list.topics[0]) {
+      latestTitle = c.topic_list.topics[0].title;
+    }
+    return '<a href="/c/' + c.slug + '/' + c.id + '" class="mc-categories__item">' +
+      '<div class="mc-categories__name">' + c.name + '</div>' +
+      '<div class="mc-categories__count">Topics: ' + c.topic_count + '</div>' +
+      (latestTitle ? '<div class="mc-categories__latest">Latest: <strong>' + latestTitle + '</strong></div>' : '') +
+    '</a>';
+  }).join('');
+
+  return '<div class="mc-categories">' +
+    '<h2 class="mc-section-title">Categories</h2>' +
+    items +
+  '</div>';
+}
+
+function mcBuildActivity(topics, users) {
+  var userMap = {};
+  if (users) {
+    users.forEach(function(u) { userMap[u.id] = u; });
+  }
+
+  var rows = topics.slice(0, 6).map(function(t) {
+    var categoryName = '';
+    if (t.category_id && window._mcCategories) {
+      var cat = window._mcCategories.find(function(c) { return c.id === t.category_id; });
+      if (cat) categoryName = cat.name;
+    }
+    return '<tr>' +
+      '<td class="mc-activity__topic">' +
+        '<a href="/t/' + t.slug + '/' + t.id + '">' + t.title + '</a>' +
+        (categoryName ? '<div class="mc-activity__cat">' + categoryName + '</div>' : '') +
+      '</td>' +
+      '<td class="mc-activity__num">' + (t.posts_count - 1) + '</td>' +
+      '<td class="mc-activity__num">' + t.views + '</td>' +
+      '<td class="mc-activity__num">' + mcTimeAgo(t.last_posted_at || t.created_at) + '</td>' +
+    '</tr>';
+  }).join('');
+
+  return '<div class="mc-activity">' +
+    '<h2 class="mc-section-title">Community activity</h2>' +
+    '<div class="mc-activity__tabs">' +
+      '<button class="mc-activity__tab mc-activity__tab--active" data-tab="latest">Latest</button>' +
+      '<button class="mc-activity__tab" data-tab="unread">Unread</button>' +
+      '<button class="mc-activity__tab" data-tab="unanswered">Unanswered</button>' +
+    '</div>' +
+    '<table class="mc-activity__table">' +
+      '<thead><tr>' +
+        '<th>Topic</th><th>Replies</th><th>Views</th><th>Activity</th>' +
+      '</tr></thead>' +
+      '<tbody id="mc-activity-body">' + rows + '</tbody>' +
+    '</table>' +
+    '<div class="mc-activity__seeall"><a href="/latest">See all</a></div>' +
+  '</div>';
+}
+
+function mcBuildContributors(directoryItems) {
+  var items = directoryItems.slice(0, 5).map(function(item) {
+    var u = item.user;
+    var avatar = u.avatar_template.replace('{size}', '45');
+    if (avatar.indexOf('http') !== 0) avatar = window.location.origin + avatar;
+    var title = u.title || '';
+    return '<div class="mc-contributors__item">' +
+      '<img class="mc-contributors__avatar" src="' + avatar + '" alt="' + u.username + '" />' +
+      '<div class="mc-contributors__info">' +
+        '<div class="mc-contributors__name">' + (u.name || u.username) + '</div>' +
+        (title ? '<div class="mc-contributors__rank">' + title + '</div>' : '') +
+      '</div>' +
+      '<div class="mc-contributors__posts">' +
+        '<span class="mc-contributors__posts-num">' + item.topic_count + '</span>' +
+        '<span class="mc-contributors__posts-label">Posts</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  return '<div class="mc-contributors">' +
+    '<h2 class="mc-section-title">Top Contributors</h2>' +
+    items +
+  '</div>';
+}
+
+function mcBuildHighlightBox() {
+  return '<div class="mc-highlight">' +
+    '<div class="mc-highlight__inner">' +
+      '<p>Box for highlighting community content / HTML widget for custom content</p>' +
+    '</div>' +
+  '</div>';
+}
+
+function mcBuildHomepage(data) {
+  var container = document.getElementById('mc-custom-homepage');
+  if (!container) return;
+
+  var html = '';
+
+  // Featured topics (pinned globally)
+  html += mcBuildFeaturedTopics(data.featured);
+
+  // Two-column: Categories + Community Activity
+  html += '<div class="mc-two-col">';
+  html += mcBuildCategories(data.categories);
+  html += mcBuildActivity(data.topics, data.users);
+  html += '</div>';
+
+  // Two-column: Top Contributors + Highlight box
+  html += '<div class="mc-two-col mc-two-col--bottom">';
+  html += mcBuildContributors(data.contributors);
+  html += mcBuildHighlightBox();
+  html += '</div>';
+
+  container.innerHTML = html;
+
+  // Animate featured cards in sequentially
+  var cards = container.querySelectorAll('.mc-featured__card');
+  if (cards.length) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    cards.forEach(function(card) { observer.observe(card); });
+  }
+
+  // Wire up activity tabs
+  var tabs = container.querySelectorAll('.mc-activity__tab');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('mc-activity__tab--active'); });
+      tab.classList.add('mc-activity__tab--active');
+      mcLoadActivityTab(tab.dataset.tab);
+    });
+  });
+}
+
+function mcLoadActivityTab(tabName) {
+  var url = '/latest.json';
+  if (tabName === 'unread') url = '/unread.json';
+
+  fetch(url, { headers: { 'Accept': 'application/json' } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var topics = data.topic_list ? data.topic_list.topics : [];
+
+      // For "unanswered" tab, filter to topics with no replies
+      if (tabName === 'unanswered') {
+        topics = topics.filter(function(t) { return t.posts_count <= 1; });
+      }
+
+      var userMap = {};
+      if (data.users) {
+        data.users.forEach(function(u) { userMap[u.id] = u; });
+      }
+
+      var rows = topics.slice(0, 6).map(function(t) {
+        var categoryName = '';
+        if (t.category_id && window._mcCategories) {
+          var cat = window._mcCategories.find(function(c) { return c.id === t.category_id; });
+          if (cat) categoryName = cat.name;
+        }
+        return '<tr>' +
+          '<td class="mc-activity__topic">' +
+            '<a href="/t/' + t.slug + '/' + t.id + '">' + t.title + '</a>' +
+            (categoryName ? '<div class="mc-activity__cat">' + categoryName + '</div>' : '') +
+          '</td>' +
+          '<td class="mc-activity__num">' + (t.posts_count - 1) + '</td>' +
+          '<td class="mc-activity__num">' + t.views + '</td>' +
+          '<td class="mc-activity__num">' + mcTimeAgo(t.last_posted_at || t.created_at) + '</td>' +
+        '</tr>';
+      }).join('');
+
+      if (rows === '') {
+        rows = '<tr><td colspan="4" class="mc-activity__empty">No topics yet</td></tr>';
+      }
+
+      var tbody = document.getElementById('mc-activity-body');
+      if (tbody) tbody.innerHTML = rows;
+    });
+}
+
+function mcInitHomepage() {
+  if (!mcIsHomepage()) return;
+
+  // Hide default Discourse category view
+  var mainOutlet = document.querySelector('#main-outlet');
+  if (mainOutlet) {
+    mainOutlet.classList.add('mc-homepage-active');
+  }
+
+  // Show CTA on homepage
+  var cta = document.querySelector('.mc-cta');
+  if (cta) cta.classList.add('mc-cta--visible');
+
+  // Fetch all data in parallel
+  Promise.all([
+    fetch('/categories.json', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
+    fetch('/latest.json', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
+    fetch('/directory_items.json?period=all&order=topic_count', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); })
+  ]).then(function(results) {
+    var categoriesData = results[0];
+    var latestData = results[1];
+    var directoryData = results[2];
+
+    var categories = categoriesData.category_list ? categoriesData.category_list.categories : [];
+    window._mcCategories = categories;
+
+    var topics = latestData.topic_list ? latestData.topic_list.topics : [];
+    var users = latestData.users || [];
+
+    // Featured = pinned topics
+    var featured = topics.filter(function(t) { return t.pinned; });
+    // If no pinned topics, use the 3 most recent
+    if (featured.length === 0) featured = topics.slice(0, 3);
+
+    var contributors = directoryData.directory_items || [];
+
+    mcBuildHomepage({
+      categories: categories,
+      topics: topics,
+      users: users,
+      featured: featured,
+      contributors: contributors
+    });
+  }).catch(function(err) {
+    console.error('MC homepage error:', err);
+  });
+}
+
+// Run on DOMContentLoaded and on Discourse page transitions
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait for the custom homepage container to be in the DOM
+  var initObserver = new MutationObserver(function() {
+    if (document.getElementById('mc-custom-homepage')) {
+      mcInitHomepage();
+      initObserver.disconnect();
+    }
+  });
+  initObserver.observe(document.body, { childList: true, subtree: true });
+  // Try immediately too
+  mcInitHomepage();
+});
+
+// Handle Discourse's client-side navigation (Ember transitions)
+(function() {
+  var lastPath = window.location.pathname;
+  var checkNav = new MutationObserver(function() {
+    if (window.location.pathname !== lastPath) {
+      lastPath = window.location.pathname;
+      // Show/hide homepage elements based on current page
+      var banner = document.querySelector('.custom-banner');
+      var welcomeBanner = document.querySelector('.mc-welcome-banner');
+      var homepage = document.getElementById('mc-custom-homepage');
+      var mainOutlet = document.querySelector('#main-outlet');
+
+      var cta = document.querySelector('.mc-cta');
+      if (mcIsHomepage()) {
+        if (banner) banner.style.display = '';
+        if (welcomeBanner && localStorage.getItem('mc-welcome-dismissed') !== '1') welcomeBanner.style.display = '';
+        if (homepage) homepage.style.display = '';
+        if (cta) cta.classList.add('mc-cta--visible');
+        if (mainOutlet) mainOutlet.classList.add('mc-homepage-active');
+        mcInitHomepage();
+      } else {
+        if (banner) banner.style.display = 'none';
+        if (welcomeBanner) welcomeBanner.style.display = 'none';
+        if (homepage) homepage.style.display = 'none';
+        if (cta) cta.classList.remove('mc-cta--visible');
+        if (mainOutlet) mainOutlet.classList.remove('mc-homepage-active');
+      }
+    }
+  });
+  checkNav.observe(document.body, { childList: true, subtree: true });
+})();
 </script>

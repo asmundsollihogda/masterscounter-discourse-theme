@@ -1,6 +1,4 @@
-/* === Master's Counter — Discourse Theme === */
-/* Reference copy for version control.                          */
-/* Apply via: Admin → Customize → Themes → [theme] → Edit CSS  */
+/* === Master's Counter — Discourse Theme (v2) === */
 
 /* Typography — Load and apply Outfit font */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
@@ -596,10 +594,12 @@ h3.latest-topic-list-header,
   padding: 0 20px !important;
   margin: 0 auto !important;
   max-width: 1100px !important;
+  padding-top: 30px !important;
 }
 @media (min-width: 768px) {
   #main-outlet {
     padding: 0 !important;
+    padding-top: 40px !important;
     max-width: 1100px !important;
   }
 }
@@ -649,10 +649,10 @@ textarea,
   border-radius: 10px;
 }
 
-/* All borders thin 1px */
-*,
-*::before,
-*::after {
+/* All borders thin 1px — scoped to avoid admin page issues */
+#main-outlet input,
+#main-outlet textarea,
+#main-outlet .select-kit .select-kit-header {
   border-width: 1px !important;
 }
 
@@ -718,33 +718,65 @@ textarea,
   display: none !important;
 }
 
-/* Hide hero banner on login and user profile pages */
+/* Hide hero banner on login, user profile, and preferences pages */
 .login-page .custom-banner,
-.user-page .custom-banner {
+.user-page .custom-banner,
+.user-preferences-page .custom-banner,
+.user-preferences .custom-banner,
+body[class*="user-"] .custom-banner {
+  display: none !important;
+}
+.login-page .mc-welcome-banner,
+.user-page .mc-welcome-banner,
+body[class*="user-"] .mc-welcome-banner {
   display: none !important;
 }
 
-/* Purpose statement bar — above hero banner */
-.custom-purpose-bar {
+/* === Welcome Banner — dark, dismissible === */
+.mc-welcome-banner {
   background-color: #191919;
   text-align: center;
-  padding: 10px 20px;
+  padding: 10px 50px;
   width: 100%;
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
 }
-.custom-purpose-bar p {
+.mc-welcome-banner p {
   color: rgba(255, 255, 255, 0.85);
   font-size: 0.875rem;
   font-weight: 400;
   margin: 0;
   letter-spacing: 0.02em;
 }
-/* Hide purpose bar on login and profile pages */
-.login-page .custom-purpose-bar,
-.user-page .custom-purpose-bar {
+.mc-welcome-banner__close {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 1.25rem;
+  font-weight: 300 !important;
+  cursor: pointer;
+  padding: 4px 10px;
+  line-height: 1;
+  border-radius: 0 !important;
+}
+.mc-welcome-banner__close:hover {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+}
+/* Hide welcome banner on non-homepage pages */
+.login-page .mc-welcome-banner,
+.user-page .mc-welcome-banner,
+.topic-page .mc-welcome-banner {
   display: none !important;
 }
 
-/* Hero banner on homepage — full width, moved outside main-outlet via JS */
+/* === Hero Banner — background image with overlay === */
 .custom-banner {
   background-image: url($hero-banner);
   background-size: cover;
@@ -753,7 +785,7 @@ textarea,
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0 24px 0;
+  margin: 0;
   border-radius: 0;
   position: relative;
   width: 100%;
@@ -769,28 +801,34 @@ textarea,
   z-index: 1;
   text-align: center;
   color: #fff;
-  padding: 40px 20px;
+  padding: 50px 20px 40px;
   width: 100%;
-  max-width: 600px;
+  max-width: 650px;
 }
 .custom-banner__content h1 {
   color: #fff;
   font-weight: 500;
   font-size: 2rem;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
-.custom-banner__content p {
+.custom-banner__desc {
   color: rgba(255, 255, 255, 0.85);
-  font-size: 1.1rem;
-  margin: 0 0 20px 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+.custom-banner__readmore {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 500;
 }
 
-/* Search bar inside hero banner */
+/* Search bar inside hero */
 .custom-banner__search {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 500px;
+  max-width: 420px;
   margin: 0 auto;
 }
 .custom-banner__search input {
@@ -809,29 +847,361 @@ textarea,
   color: #7a7a7a;
 }
 
-/* Welcome notice — below hero banner */
-.mc-welcome-notice {
-  max-width: 1100px;
-  margin: 0 auto 20px auto;
-  padding: 16px 24px;
-  background-color: #f2f1ec;
-  border-radius: 10px;
-  text-align: center;
-}
-.mc-welcome-notice p {
-  margin: 0;
-  font-size: 0.9375rem;
-  font-weight: 400;
-  color: #191919;
-}
-/* Hide welcome notice on non-homepage pages */
-.login-page .mc-welcome-notice,
-.user-page .mc-welcome-notice,
-.topic-page .mc-welcome-notice {
+/* === Homepage — hide default Discourse content when custom homepage is active === */
+.mc-homepage-active .navigation-container,
+.mc-homepage-active .category-list,
+.mc-homepage-active .categories-list,
+.mc-homepage-active .categories-boxes-container,
+.mc-homepage-active .latest-topic-list,
+.mc-homepage-active .topic-list,
+.mc-homepage-active .category-breadcrumb,
+.mc-homepage-active .nav-pills,
+.mc-homepage-active > .container,
+.mc-homepage-active > .list-container {
   display: none !important;
 }
 
-/* CTA section — above footer */
+/* === Custom Homepage Container === */
+#mc-custom-homepage {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* === Section Titles === */
+.mc-section-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #7a7a7a;
+  margin: 0 0 16px 0;
+}
+.mc-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #191919;
+  margin: 0 0 16px 0;
+}
+
+/* === Featured Topics === */
+.mc-featured {
+  background-color: #f2f1ec;
+  padding: 40px 20px 32px;
+  margin-left: -9999px;
+  margin-right: -9999px;
+  padding-left: 9999px;
+  padding-right: 9999px;
+}
+.mc-featured__grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+@media (min-width: 1140px) {
+  .mc-featured__grid {
+    padding: 0;
+  }
+}
+.mc-featured__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 600px) {
+  .mc-featured__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.mc-featured__card {
+  display: block;
+  border: none !important;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none !important;
+  color: #191919 !important;
+  background: #fff;
+  transition: box-shadow 0.2s, opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.mc-featured__card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.mc-featured__card:nth-child(1) { transition-delay: 0s; }
+.mc-featured__card:nth-child(2) { transition-delay: 0.15s; }
+.mc-featured__card:nth-child(3) { transition-delay: 0.3s; }
+.mc-featured__card:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  color: #191919 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mc-featured__card {
+    opacity: 1;
+    transform: none;
+    transition: box-shadow 0.2s;
+  }
+}
+.mc-featured__img {
+  width: 100%;
+  height: 140px;
+  background-color: #e8e8e8;
+  background-size: cover;
+  background-position: center;
+}
+.mc-featured__img--empty {
+  background-color: #e0e0e0;
+}
+.mc-featured__card:nth-child(1) .mc-featured__img {
+  background-image: url($featured-1);
+}
+.mc-featured__card:nth-child(2) .mc-featured__img {
+  background-image: url($featured-2);
+}
+.mc-featured__card:nth-child(3) .mc-featured__img {
+  background-image: url($featured-3);
+}
+.mc-featured__title {
+  padding: 14px 16px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+/* === Two Column Layout === */
+.mc-two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding: 32px 20px;
+  max-width: 1140px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border-bottom: 1px solid #e8e8e8;
+}
+@media (min-width: 768px) {
+  .mc-two-col {
+    grid-template-columns: 280px 1fr;
+    gap: 48px;
+  }
+}
+.mc-two-col--bottom {
+  border-bottom: none;
+}
+
+/* === Categories List (left column) === */
+.mc-categories__item {
+  display: block;
+  padding: 16px;
+  background-color: #f2f1ec;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  text-decoration: none !important;
+  color: #191919 !important;
+  transition: background-color 0.2s;
+}
+.mc-categories__item:hover {
+  background-color: #eae9e3;
+  color: #191919 !important;
+}
+.mc-categories__name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.mc-categories__count {
+  font-size: 0.8125rem;
+  color: #7a7a7a;
+  margin-bottom: 6px;
+}
+.mc-categories__latest {
+  font-size: 0.8125rem;
+  color: #555;
+}
+.mc-categories__latest strong {
+  font-weight: 500;
+  color: #191919;
+}
+
+/* === Community Activity (right column) === */
+.mc-activity {
+  display: flex;
+  flex-direction: column;
+}
+.mc-activity__tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  border: 1px solid #ddd !important;
+  border-radius: 9999px;
+  overflow: hidden;
+  width: fit-content;
+}
+.mc-activity__tab {
+  background: #fff;
+  border: none !important;
+  padding: 8px 20px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #555;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 0 !important;
+}
+.mc-activity__tab:hover {
+  background-color: #f5f5f5;
+}
+.mc-activity__tab--active {
+  background-color: #f2f1ec;
+  color: #191919;
+  font-weight: 500;
+}
+.mc-activity__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.mc-activity__table thead th {
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: #7a7a7a !important;
+  text-align: left;
+  padding: 8px 12px 8px 0;
+  border-bottom: 1px solid #e8e8e8 !important;
+}
+.mc-activity__table thead th:first-child {
+  padding-left: 0;
+}
+.mc-activity__table tbody tr {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+.mc-activity__table tbody tr:last-child {
+  border-bottom: none !important;
+}
+.mc-activity__topic {
+  padding: 12px 12px 12px 0;
+}
+.mc-activity__topic a {
+  color: #191919 !important;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.mc-activity__topic a:hover {
+  text-decoration: underline;
+}
+.mc-activity__cat {
+  font-size: 0.8125rem;
+  color: #7a7a7a;
+  margin-top: 2px;
+}
+.mc-activity__num {
+  padding: 12px 12px 12px 0;
+  font-size: 0.8125rem;
+  color: #7a7a7a;
+  white-space: nowrap;
+}
+.mc-activity__empty {
+  padding: 20px 0;
+  color: #999;
+  font-size: 0.875rem;
+}
+.mc-activity__seeall {
+  text-align: left;
+  padding-top: 8px;
+  margin-top: auto;
+}
+.mc-activity__seeall a {
+  display: inline-block;
+  background-color: #e8e8e8;
+  color: #191919;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 6px 18px;
+  border-radius: 9999px;
+}
+.mc-activity__seeall a:hover {
+  background-color: #ddd;
+  text-decoration: none;
+}
+
+/* === Top Contributors (left column) === */
+.mc-contributors__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.mc-contributors__item:last-child {
+  border-bottom: none;
+}
+.mc-contributors__avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.mc-contributors__info {
+  flex: 1;
+  min-width: 0;
+}
+.mc-contributors__name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #191919;
+}
+.mc-contributors__rank {
+  font-size: 0.8125rem;
+  color: #7a7a7a;
+}
+.mc-contributors__posts {
+  text-align: right;
+  flex-shrink: 0;
+}
+.mc-contributors__posts-num {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #191919;
+}
+.mc-contributors__posts-label {
+  display: block;
+  font-size: 0.8125rem;
+  color: #7a7a7a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* === Highlight / Custom Content Box === */
+.mc-highlight {
+  display: flex;
+  align-items: stretch;
+}
+.mc-highlight__inner {
+  flex: 1;
+  background-color: #e8e8e8;
+  border-radius: 10px;
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 200px;
+}
+.mc-highlight__inner p {
+  color: #555;
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+/* === CTA section — above footer === */
 .mc-cta {
   text-align: center;
   padding: 40px 20px;
@@ -839,7 +1209,7 @@ textarea,
   margin: 0 auto;
 }
 .mc-cta__text {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: 400;
   color: #191919;
   margin: 0 0 16px 0;
@@ -849,7 +1219,7 @@ textarea,
   background-color: #6bcdb6;
   color: #191919 !important;
   -webkit-text-fill-color: #191919 !important;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: 400;
   padding: 10px 28px;
   border-radius: 9999px;
@@ -862,11 +1232,12 @@ textarea,
   -webkit-text-fill-color: #191919 !important;
   text-decoration: none !important;
 }
-/* Hide CTA on non-homepage pages */
-.login-page .mc-cta,
-.user-page .mc-cta,
-.topic-page .mc-cta {
+/* Hide CTA by default — JS shows it on homepage only */
+.mc-cta {
   display: none !important;
+}
+.mc-cta--visible {
+  display: block !important;
 }
 
 /* === Site Footer (exact match with main site) === */
