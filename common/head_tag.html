@@ -68,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
       insertAfter.after(banner);
       if (homepage) banner.after(homepage);
       observer.disconnect();
+
+      // Hide homepage elements if not on homepage
+      if (!mcIsHomepage()) {
+        banner.style.display = 'none';
+        if (welcomeBanner) welcomeBanner.style.display = 'none';
+        if (homepage) homepage.style.display = 'none';
+      }
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
@@ -358,6 +365,12 @@ function mcInitHomepage() {
     // If no pinned topics, use the 3 most recent
     if (featured.length === 0) featured = topics.slice(0, 3);
 
+    // Store featured topic ID → image index mapping
+    window._mcFeaturedMap = {};
+    featured.slice(0, 3).forEach(function(t, i) {
+      window._mcFeaturedMap[t.id] = i + 1;
+    });
+
     var contributors = directoryData.directory_items || [];
 
     mcBuildHomepage({
@@ -413,8 +426,88 @@ document.addEventListener('DOMContentLoaded', function() {
         if (cta) cta.classList.remove('mc-cta--visible');
         if (mainOutlet) mainOutlet.classList.remove('mc-homepage-active');
       }
+      // Handle topic hero on navigation
+      mcBuildTopicHero();
     }
   });
   checkNav.observe(document.body, { childList: true, subtree: true });
 })();
+
+// === Topic Page Hero ===
+function mcIsTopicPage() {
+  return /^\/t\//.test(window.location.pathname);
+}
+
+function mcBuildTopicHero() {
+  // Only show topic hero on topic pages
+  if (!mcIsTopicPage()) {
+    var existing = document.getElementById('mc-topic-hero');
+    if (existing) existing.remove();
+    return;
+  }
+
+  // Wait for topic title to be in the DOM
+  var titleEl = document.querySelector('#topic-title .fancy-title');
+  if (!titleEl) return;
+
+  // Don't re-create if already showing for this topic
+  var existing = document.getElementById('mc-topic-hero');
+  if (existing && existing.dataset.title === titleEl.textContent) return;
+  if (existing) existing.remove();
+
+  var title = titleEl.textContent;
+  var categoryBadge = document.querySelector('#topic-title .badge-category__name');
+  var category = categoryBadge ? categoryBadge.textContent : '';
+
+  // Get topic ID from URL (/t/slug/ID)
+  var pathParts = window.location.pathname.split('/');
+  var topicId = parseInt(pathParts[3], 10);
+
+  var hero = document.createElement('div');
+  hero.id = 'mc-topic-hero';
+  hero.dataset.title = title;
+
+  // Check if this topic has a featured image
+  if (window._mcFeaturedMap && window._mcFeaturedMap[topicId]) {
+    hero.className = 'mc-topic-hero--f' + window._mcFeaturedMap[topicId];
+  } else if (!window._mcFeaturedMap) {
+    // Direct page load — fetch featured mapping
+    fetch('/latest.json', { headers: { 'Accept': 'application/json' } })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var topics = data.topic_list ? data.topic_list.topics : [];
+        var feat = topics.filter(function(t) { return t.pinned; });
+        if (feat.length === 0) feat = topics.slice(0, 3);
+        window._mcFeaturedMap = {};
+        feat.slice(0, 3).forEach(function(t, i) {
+          window._mcFeaturedMap[t.id] = i + 1;
+        });
+        if (window._mcFeaturedMap[topicId]) {
+          hero.className = 'mc-topic-hero--f' + window._mcFeaturedMap[topicId];
+        }
+      });
+  }
+
+  hero.innerHTML =
+    '<div class="mc-topic-hero__content">' +
+      (category ? '<span class="mc-topic-hero__cat">' + category + '</span>' : '') +
+      '<h1 class="mc-topic-hero__title">' + title + '</h1>' +
+    '</div>';
+
+  // Insert before main-outlet
+  var header = document.querySelector('.d-header-wrap');
+  if (header) {
+    header.after(hero);
+  }
+
+  // Hide the original topic title
+  var topicTitle = document.querySelector('#topic-title');
+  if (topicTitle) topicTitle.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var topicObs = new MutationObserver(mcBuildTopicHero);
+  topicObs.observe(document.body, { childList: true, subtree: true });
+  mcBuildTopicHero();
+});
 </script>
