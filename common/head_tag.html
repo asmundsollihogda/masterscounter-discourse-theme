@@ -563,19 +563,28 @@ function mcBuildTopicHero() {
   if (topicTitle) topicTitle.style.display = 'none';
 }
 
-function mcIsLatestPage() {
-  return /^\/latest\/?$/.test(window.location.pathname);
+var MC_LIST_PAGES = {
+  '/latest': 'All activity',
+  '/new': 'New',
+  '/unread': 'Unread',
+  '/categories': 'Categories'
+};
+
+function mcCurrentListTitle() {
+  var path = window.location.pathname.replace(/\/$/, '');
+  return MC_LIST_PAGES[path] || null;
 }
 
 function mcBuildLatestHero() {
-  if (!mcIsLatestPage()) {
-    var existing = document.getElementById('mc-latest-hero');
+  var title = mcCurrentListTitle();
+  var existing = document.getElementById('mc-latest-hero');
+  if (!title) {
     if (existing) existing.remove();
     return;
   }
-  if (document.getElementById('mc-latest-hero')) return;
+  if (existing && existing.dataset.title === title) return;
+  if (existing) existing.remove();
 
-  var title = 'All activity';
   var crumbHtml =
     '<a href="/" class="mc-topic-hero__crumb">Home</a>' +
     '<span class="mc-topic-hero__crumb-sep">,</span>' +
@@ -584,6 +593,7 @@ function mcBuildLatestHero() {
   var hero = document.createElement('div');
   hero.id = 'mc-latest-hero';
   hero.className = 'mc-page-hero';
+  hero.dataset.title = title;
   hero.innerHTML =
     '<div class="mc-topic-hero__content">' +
       '<h1 class="mc-topic-hero__title">' + title + '</h1>' +
