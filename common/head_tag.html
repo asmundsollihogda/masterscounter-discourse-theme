@@ -7,13 +7,15 @@
 function addHeaderLinks() {
   var panel = document.querySelector('.d-header .panel');
   if (panel && !document.querySelector('.mc-header-nav')) {
+    var isAnon = document.body.classList.contains('anon');
     var nav = document.createElement('div');
     nav.className = 'mc-header-nav';
     var links = [
       { text: 'Courses', href: 'https://masterscounter.com/courses' },
-      { text: 'Account', href: 'https://masterscounter.com/account' }
+      { text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
     ];
     links.forEach(function(link) {
+      if (link.authRequired && isAnon) return;
       var a = document.createElement('a');
       a.className = 'mc-header-link';
       a.href = link.href;
