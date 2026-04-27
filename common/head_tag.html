@@ -497,6 +497,17 @@ function mcBuildTopicHero() {
   var categoryBadge = document.querySelector('#topic-title .badge-category__name');
   var category = categoryBadge ? categoryBadge.textContent : '';
 
+  // Build breadcrumb chain (Home › [parent] › [child]) from rendered category badges
+  var crumbs = [];
+  document.querySelectorAll('#topic-title .badge-category__wrapper').forEach(function(el) {
+    var nameEl = el.querySelector('.badge-category__name');
+    if (!nameEl) return;
+    var href = el.tagName === 'A'
+      ? el.getAttribute('href')
+      : (el.closest('a') ? el.closest('a').getAttribute('href') : null);
+    crumbs.push({ name: nameEl.textContent, href: href });
+  });
+
   // Get topic ID from URL (/t/slug/ID)
   var pathParts = window.location.pathname.split('/');
   var topicId = parseInt(pathParts[3], 10);
@@ -526,10 +537,19 @@ function mcBuildTopicHero() {
       });
   }
 
+  var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">Home</a>';
+  crumbs.forEach(function(c) {
+    crumbHtml += '<span class="mc-topic-hero__crumb-sep">›</span>';
+    crumbHtml += c.href
+      ? '<a href="' + c.href + '" class="mc-topic-hero__crumb">' + c.name + '</a>'
+      : '<span class="mc-topic-hero__crumb">' + c.name + '</span>';
+  });
+
   hero.innerHTML =
     '<div class="mc-topic-hero__content">' +
       (category ? '<span class="mc-topic-hero__cat">' + category + '</span>' : '') +
       '<h1 class="mc-topic-hero__title">' + title + '</h1>' +
+      '<nav class="mc-topic-hero__breadcrumb" aria-label="Breadcrumb">' + crumbHtml + '</nav>' +
     '</div>';
 
   // Insert before main-outlet

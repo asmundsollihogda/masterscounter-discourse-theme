@@ -1307,6 +1307,26 @@ body[class*="user-"] .mc-welcome-banner {
   line-height: 1.3;
   margin: 0;
 }
+.mc-topic-hero__breadcrumb {
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.mc-topic-hero__crumb {
+  color: rgba(255, 255, 255, 0.85) !important;
+  text-decoration: none !important;
+  transition: color 0.15s;
+}
+a.mc-topic-hero__crumb:hover {
+  color: #dfb570 !important;
+}
+.mc-topic-hero__crumb-sep {
+  color: rgba(255, 255, 255, 0.4);
+}
 @media (min-width: 768px) {
   #mc-topic-hero {
     min-height: 240px;
