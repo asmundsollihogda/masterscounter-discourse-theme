@@ -1,6 +1,6 @@
 banner_title:
   type: string
-  default: "Master's Counter — Sushi Society"
+  default: "Master's Counter - Sushi Society"
   description: "Hero banner heading text"
 
 banner_subtitle:
