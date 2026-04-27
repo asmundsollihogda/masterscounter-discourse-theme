@@ -1311,10 +1311,6 @@ body[class*="user-"] .mc-welcome-banner {
   margin-top: 12px;
   font-size: 0.8125rem;
   color: rgba(255, 255, 255, 0.7);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
 }
 .mc-topic-hero__crumb {
   color: rgba(255, 255, 255, 0.85) !important;
@@ -1325,7 +1321,8 @@ a.mc-topic-hero__crumb:hover {
   color: #dfb570 !important;
 }
 .mc-topic-hero__crumb-sep {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 4px 0 0;
 }
 @media (min-width: 768px) {
   #mc-topic-hero {

@@ -539,7 +539,7 @@ function mcBuildTopicHero() {
 
   var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">Home</a>';
   crumbs.forEach(function(c) {
-    crumbHtml += '<span class="mc-topic-hero__crumb-sep">›</span>';
+    crumbHtml += '<span class="mc-topic-hero__crumb-sep">,</span>';
     crumbHtml += c.href
       ? '<a href="' + c.href + '" class="mc-topic-hero__crumb">' + c.name + '</a>'
       : '<span class="mc-topic-hero__crumb">' + c.name + '</span>';
