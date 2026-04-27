@@ -326,21 +326,29 @@ a {
   color: #191919;
 }
 
-/* Sign Up button — gold */
-.sign-up-button {
-  background-color: #dfb570 !important;
-  color: #191919 !important;
-  font-weight: 400 !important;
-  font-size: 1rem !important;
-}
-
-/* Log In button — match main site .badge--primary */
-.login-button {
+/* Register button — brand green (mint) */
+.mc-register-button {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   background-color: #6bcdb6 !important;
   color: #282828 !important;
+  font-family: inherit !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  padding: 5px 15px !important;
+  border-radius: 9999px !important;
+  border: none !important;
+  text-decoration: none !important;
+}
+
+/* Log In button — brand gold */
+.login-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #dfb570 !important;
+  color: #191919 !important;
   font-family: inherit !important;
   font-size: 1rem !important;
   font-weight: 400 !important;

@@ -26,10 +26,31 @@ function addHeaderLinks() {
   }
 }
 document.addEventListener('DOMContentLoaded', function() {
-  var observer = new MutationObserver(addHeaderLinks);
+  var observer = new MutationObserver(function() {
+    addHeaderLinks();
+    addRegisterButton();
+  });
   observer.observe(document.body, { childList: true, subtree: true });
   addHeaderLinks();
+  addRegisterButton();
 });
+
+// Add Register button left of Log In for logged-out users
+function addRegisterButton() {
+  var authButtons = document.querySelector('.d-header .auth-buttons');
+  if (!authButtons || authButtons.querySelector('.mc-register-button')) return;
+  var loginBtn = authButtons.querySelector('.login-button');
+  if (!loginBtn) return;
+  var btn = document.createElement('button');
+  btn.className = 'btn btn-primary mc-register-button';
+  btn.type = 'button';
+  btn.textContent = 'Register';
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    loginBtn.click();
+  });
+  authButtons.insertBefore(btn, loginBtn);
+}
 
 // Close sidebar on clicking outside
 document.addEventListener('click', function(e) {
