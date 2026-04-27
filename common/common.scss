@@ -324,12 +324,14 @@ a {
 }
 
 /* Register button — brand green (mint) */
-.mc-register-button {
+.d-header .auth-buttons .mc-register-button,
+.d-header .auth-buttons button.mc-register-button {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   background-color: #6bcdb6 !important;
-  color: #282828 !important;
+  color: #191919 !important;
+  -webkit-text-fill-color: #191919 !important;
   font-family: inherit !important;
   font-size: 1rem !important;
   font-weight: 400 !important;
@@ -340,12 +342,14 @@ a {
 }
 
 /* Log In button — brand gold */
-.login-button {
+.d-header .auth-buttons .login-button,
+.d-header .auth-buttons button.login-button {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   background-color: #dfb570 !important;
   color: #191919 !important;
+  -webkit-text-fill-color: #191919 !important;
   font-family: inherit !important;
   font-size: 1rem !important;
   font-weight: 400 !important;
@@ -354,8 +358,8 @@ a {
   border: none !important;
   text-decoration: none !important;
 }
-.login-button .d-icon,
-.login-button svg {
+.d-header .auth-buttons .login-button .d-icon,
+.d-header .auth-buttons .login-button svg {
   display: none !important;
 }
 
