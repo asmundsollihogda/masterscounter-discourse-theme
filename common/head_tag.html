@@ -379,11 +379,13 @@ function mcInitHomepage() {
   Promise.all([
     fetch('/categories.json', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
     fetch('/latest.json', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
-    fetch('/directory_items.json?period=all&order=post_count', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); })
+    fetch('/directory_items.json?period=all&order=post_count', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
+    fetch('/groups/staff/members.json?limit=100', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }).catch(function() { return { members: [], owners: [] }; })
   ]).then(function(results) {
     var categoriesData = results[0];
     var latestData = results[1];
     var directoryData = results[2];
+    var staffData = results[3] || {};
 
     var categories = categoriesData.category_list ? categoriesData.category_list.categories : [];
     window._mcCategories = categories;
@@ -402,7 +404,12 @@ function mcInitHomepage() {
       window._mcFeaturedMap[t.id] = i + 1;
     });
 
-    var contributors = directoryData.directory_items || [];
+    // Exclude staff (admins + moderators) from the leaderboard
+    var staffIds = {};
+    [].concat(staffData.members || [], staffData.owners || []).forEach(function(u) { staffIds[u.id] = true; });
+    var contributors = (directoryData.directory_items || []).filter(function(item) {
+      return item.user && !staffIds[item.user.id];
+    });
 
     mcBuildHomepage({
       categories: categories,
