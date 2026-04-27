@@ -563,9 +563,44 @@ function mcBuildTopicHero() {
   if (topicTitle) topicTitle.style.display = 'none';
 }
 
+function mcIsLatestPage() {
+  return /^\/latest\/?$/.test(window.location.pathname);
+}
+
+function mcBuildLatestHero() {
+  if (!mcIsLatestPage()) {
+    var existing = document.getElementById('mc-latest-hero');
+    if (existing) existing.remove();
+    return;
+  }
+  if (document.getElementById('mc-latest-hero')) return;
+
+  var title = 'All activity';
+  var crumbHtml =
+    '<a href="/" class="mc-topic-hero__crumb">Home</a>' +
+    '<span class="mc-topic-hero__crumb-sep">,</span>' +
+    '<span class="mc-topic-hero__crumb">' + title + '</span>';
+
+  var hero = document.createElement('div');
+  hero.id = 'mc-latest-hero';
+  hero.className = 'mc-page-hero';
+  hero.innerHTML =
+    '<div class="mc-topic-hero__content">' +
+      '<h1 class="mc-topic-hero__title">' + title + '</h1>' +
+      '<nav class="mc-topic-hero__breadcrumb" aria-label="Breadcrumb">' + crumbHtml + '</nav>' +
+    '</div>';
+
+  var header = document.querySelector('.d-header-wrap');
+  if (header) header.after(hero);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  var topicObs = new MutationObserver(mcBuildTopicHero);
+  var topicObs = new MutationObserver(function() {
+    mcBuildTopicHero();
+    mcBuildLatestHero();
+  });
   topicObs.observe(document.body, { childList: true, subtree: true });
   mcBuildTopicHero();
+  mcBuildLatestHero();
 });
 </script>

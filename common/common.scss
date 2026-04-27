@@ -1256,8 +1256,9 @@ body[class*="user-"] .mc-welcome-banner {
   margin: 0;
 }
 
-/* === Topic Page Hero === */
-#mc-topic-hero {
+/* === Topic / List Page Hero === */
+#mc-topic-hero,
+.mc-page-hero {
   background-image: url($hero-banner);
   background-size: cover;
   background-position: center;
@@ -1276,7 +1277,8 @@ body[class*="user-"] .mc-welcome-banner {
 #mc-topic-hero.mc-topic-hero--f3 {
   background-image: url($featured-3);
 }
-#mc-topic-hero::after {
+#mc-topic-hero::after,
+.mc-page-hero::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1325,7 +1327,8 @@ a.mc-topic-hero__crumb:hover {
   margin: 0 4px 0 0;
 }
 @media (min-width: 768px) {
-  #mc-topic-hero {
+  #mc-topic-hero,
+  .mc-page-hero {
     min-height: 240px;
   }
   .mc-topic-hero__title {
