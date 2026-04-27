@@ -229,11 +229,19 @@ function mcBuildActivity(topics, users) {
 }
 
 function mcBuildContributors(directoryItems) {
-  var items = directoryItems.slice(0, 5).map(function(item) {
+  // Sort by total contributions (topics started + replies). Discourse's
+  // directory_items API returns topic_count and post_count separately and
+  // doesn't expose a combined ordering, so we sort client-side.
+  var sorted = directoryItems.slice().sort(function(a, b) {
+    return ((b.topic_count || 0) + (b.post_count || 0)) -
+           ((a.topic_count || 0) + (a.post_count || 0));
+  });
+  var items = sorted.slice(0, 5).map(function(item) {
     var u = item.user;
     var avatar = u.avatar_template.replace('{size}', '45');
     if (avatar.indexOf('http') !== 0) avatar = window.location.origin + avatar;
     var title = u.title || '';
+    var total = (item.topic_count || 0) + (item.post_count || 0);
     return '<div class="mc-contributors__item">' +
       '<img class="mc-contributors__avatar" src="' + avatar + '" alt="' + u.username + '" />' +
       '<div class="mc-contributors__info">' +
@@ -241,7 +249,7 @@ function mcBuildContributors(directoryItems) {
         (title ? '<div class="mc-contributors__rank">' + title + '</div>' : '') +
       '</div>' +
       '<div class="mc-contributors__posts">' +
-        '<span class="mc-contributors__posts-num">' + item.topic_count + '</span>' +
+        '<span class="mc-contributors__posts-num">' + total + '</span>' +
         '<span class="mc-contributors__posts-label">Posts</span>' +
       '</div>' +
     '</div>';
@@ -371,7 +379,7 @@ function mcInitHomepage() {
   Promise.all([
     fetch('/categories.json', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
     fetch('/latest.json', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); }),
-    fetch('/directory_items.json?period=all&order=topic_count', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); })
+    fetch('/directory_items.json?period=all&order=post_count', { headers: { 'Accept': 'application/json' } }).then(function(r) { return r.json(); })
   ]).then(function(results) {
     var categoriesData = results[0];
     var latestData = results[1];
