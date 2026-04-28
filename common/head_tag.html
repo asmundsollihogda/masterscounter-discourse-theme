@@ -604,13 +604,116 @@ function mcBuildLatestHero() {
   if (header) header.after(hero);
 }
 
+function mcEsc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function mcCategoryIdFromUrl() {
+  var match = window.location.pathname.match(/^\/c\/(?:[^\/]+\/)*?(\d+)\/?$/);
+  return match ? parseInt(match[1], 10) : null;
+}
+
+function mcFindCategory(id) {
+  var cats = window._mcCategories || [];
+  for (var i = 0; i < cats.length; i++) {
+    if (cats[i].id === id) return cats[i];
+    var subs = cats[i].subcategory_list || [];
+    for (var j = 0; j < subs.length; j++) {
+      if (subs[j].id === id) return subs[j];
+    }
+  }
+  return null;
+}
+
+function mcFetchCategories() {
+  if (window._mcCategoriesPromise) return window._mcCategoriesPromise;
+  window._mcCategoriesPromise = fetch('/categories.json', { headers: { 'Accept': 'application/json' } })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var cats = data.category_list ? data.category_list.categories : [];
+      window._mcCategories = cats;
+      return cats;
+    })
+    .catch(function() { return []; });
+  return window._mcCategoriesPromise;
+}
+
+function mcBuildCategoryHero() {
+  var id = mcCategoryIdFromUrl();
+  var existing = document.getElementById('mc-category-hero');
+  if (!id) {
+    if (existing) existing.remove();
+    return;
+  }
+  if (existing && existing.dataset.catId == String(id)) return;
+
+  mcFetchCategories().then(function() {
+    var cat = mcFindCategory(id);
+    if (!cat) return;
+    if (mcCategoryIdFromUrl() !== id) return; // navigated away while fetching
+    var prev = document.getElementById('mc-category-hero');
+    if (prev) prev.remove();
+
+    var crumbs = [];
+    if (cat.parent_category_id) {
+      var parent = mcFindCategory(cat.parent_category_id);
+      if (parent) crumbs.push({ name: parent.name, href: '/c/' + parent.slug + '/' + parent.id });
+    }
+    crumbs.push({ name: cat.name, href: null });
+
+    var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">Home</a>';
+    crumbs.forEach(function(c) {
+      crumbHtml += '<span class="mc-topic-hero__crumb-sep">,</span>';
+      crumbHtml += c.href
+        ? '<a href="' + mcEsc(c.href) + '" class="mc-topic-hero__crumb">' + mcEsc(c.name) + '</a>'
+        : '<span class="mc-topic-hero__crumb">' + mcEsc(c.name) + '</span>';
+    });
+
+    var hero = document.createElement('div');
+    hero.id = 'mc-category-hero';
+    hero.className = 'mc-page-hero';
+    hero.dataset.catId = id;
+    hero.innerHTML =
+      '<div class="mc-topic-hero__content">' +
+        '<h1 class="mc-topic-hero__title">' + mcEsc(cat.name) + '</h1>' +
+        (cat.description_text ? '<p class="mc-topic-hero__desc">' + mcEsc(cat.description_text) + '</p>' : '') +
+        '<nav class="mc-topic-hero__breadcrumb" aria-label="Breadcrumb">' + crumbHtml + '</nav>' +
+      '</div>';
+
+    var header = document.querySelector('.d-header-wrap');
+    if (header) header.after(hero);
+  });
+}
+
+// Force topic links from list/category pages to open at the first post (post #1)
+// instead of scrolling to last-read. Mutates href so middle/cmd-click works too.
+function mcForceTopOnTopicLinks() {
+  if (mcIsTopicPage()) return;
+  document.querySelectorAll('a.raw-topic-link, a.title.raw-link').forEach(function(a) {
+    if (a.dataset.mcRewritten) return;
+    var href = a.getAttribute('href');
+    if (!href) return;
+    var m = href.match(/^(\/t\/[^\/]+\/\d+)\/?$/);
+    if (m) {
+      a.setAttribute('href', m[1] + '/1');
+      a.dataset.mcRewritten = '1';
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   var topicObs = new MutationObserver(function() {
     mcBuildTopicHero();
     mcBuildLatestHero();
+    mcBuildCategoryHero();
+    mcForceTopOnTopicLinks();
   });
   topicObs.observe(document.body, { childList: true, subtree: true });
   mcBuildTopicHero();
   mcBuildLatestHero();
+  mcBuildCategoryHero();
+  mcForceTopOnTopicLinks();
 });
 </script>
