@@ -556,66 +556,23 @@ h3.latest-topic-list-header,
   border-bottom: 2px solid #6bcdb6 !important;
 }
 
-/* Sidebar — slide over content, below navbar */
+/* Sidebar — persistent left column on non-homepage pages, hidden on the
+   custom homepage. Relies on SiteSetting navigation_menu = "sidebar". */
 .sidebar-wrapper {
-  position: fixed !important;
-  top: 60px !important;
-  left: 0 !important;
-  height: calc(100vh - 60px) !important;
-  z-index: 99 !important;
-  background: #fff !important;
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15) !important;
-  transform: translateX(-100%);
-  transition: transform 0.25s ease;
-  padding-top: 0 !important;
   width: 280px !important;
+  background: #fff !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
-.has-sidebar-page .sidebar-wrapper {
-  transform: translateX(0);
+
+/* Hide sidebar on the custom homepage (mc-homepage-active is set by the theme JS). */
+body.mc-homepage-active .sidebar-wrapper,
+body.mc-homepage-active .header-sidebar-toggle {
+  display: none !important;
 }
-/* Prevent main content from shifting when sidebar opens */
-#main-outlet-wrapper,
-#main-outlet,
-.d-header .wrap,
-.sidebar-wrapper + * {
-  transition: none !important;
-}
-#main-outlet-wrapper,
-.has-sidebar-page #main-outlet-wrapper {
-  display: block !important;
-  margin: 0 auto !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  padding: 0 !important;
-}
-.has-sidebar-page #main-outlet,
-#main-outlet {
-  width: 100% !important;
-  max-width: 1100px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 0 !important;
-  box-sizing: border-box !important;
-}
-.has-sidebar-page .d-header .wrap {
-  padding-left: initial !important;
-}
-/* Dark overlay on content when sidebar is open */
-#main-outlet-wrapper::before {
-  content: '' !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background: rgba(0, 0, 0, 0) !important;
-  z-index: 98 !important;
-  pointer-events: none !important;
-  transition: background 0.25s ease !important;
-}
-.has-sidebar-page #main-outlet-wrapper::before {
-  background: rgba(0, 0, 0, 0.4) !important;
-  pointer-events: auto !important;
+
+/* On the homepage, let main content go full width (custom layout handles it). */
+body.mc-homepage-active #main-outlet-wrapper {
+  margin-left: 0 !important;
 }
 
 /* Main content — centered, matching footer layout */
