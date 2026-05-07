@@ -564,6 +564,16 @@ h3.latest-topic-list-header,
   border-right: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
 
+/* In header_dropdown mode Discourse still renders an empty .sidebar-wrapper
+   placeholder inside #main-outlet-wrapper that would otherwise steal 280px
+   next to user/profile pages and overlap the form. The toggleable drawer
+   is a separate element (#d-sidebar) so this is safe. We use
+   :not(:has(*)) instead of :empty because Ember leaves a whitespace
+   text node + comment inside, which :empty does not match. */
+.sidebar-wrapper:not(:has(*)) {
+  display: none !important;
+}
+
 /* Hide sidebar on the custom homepage (mc-homepage-active is set by the theme JS). */
 body.mc-homepage-active .sidebar-wrapper,
 body.mc-homepage-active .header-sidebar-toggle {
