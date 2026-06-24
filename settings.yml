@@ -17,3 +17,8 @@ site_url:
   type: string
   default: "https://masterscounter.com"
   description: "Main site URL for footer links and Video Courses button"
+
+highlight_image:
+  type: upload
+  default: ""
+  description: "Homepage highlight box image (bottom of homepage). Leave empty to use the bundled default. Recommended ~1600px wide."

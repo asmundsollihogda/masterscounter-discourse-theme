@@ -268,10 +268,10 @@ function mcBuildContributors(directoryItems) {
 }
 
 function mcBuildHighlightBox() {
+  // Image is painted via CSS background (theme setting `highlight_image`,
+  // falling back to the bundled `highlight` asset), so the markup stays empty.
   return '<div class="mc-highlight">' +
-    '<div class="mc-highlight__inner">' +
-      '<p>Box for highlighting community content / HTML widget for custom content</p>' +
-    '</div>' +
+    '<div class="mc-highlight__inner"></div>' +
   '</div>';
 }
 

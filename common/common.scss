@@ -239,6 +239,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 400 !important;
   font-size: clamp(0px, 1em, 16px) !important;
 }
+/* Restore inline bold inside post bodies — the weight-400 rule above otherwise
+   flattens <strong>/<b>, so bold typed in the composer never shows once published. */
+#main-outlet .cooked b,
+#main-outlet .cooked strong {
+  font-weight: 600 !important;
+}
 /* thead — H5 style */
 #main-outlet thead th,
 #main-outlet thead th span,
@@ -1208,19 +1214,20 @@ body[class*="user-"] .mc-welcome-banner {
 }
 .mc-highlight__inner {
   flex: 1;
-  background-color: #e8e8e8;
   border-radius: 10px;
-  padding: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
   min-height: 200px;
-}
-.mc-highlight__inner p {
-  color: #555;
-  font-size: 0.9375rem;
-  margin: 0;
+  background-color: #191919;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Admin-set image wins; otherwise fall back to the bundled default.
+     Discourse recompiles this stylesheet when the setting changes, so the
+     @if is re-evaluated each time the upload is set or cleared. */
+  @if $highlight_image != "" {
+    background-image: url($highlight_image);
+  } @else {
+    background-image: url($highlight);
+  }
 }
 
 /* === Topic / List Page Hero === */
