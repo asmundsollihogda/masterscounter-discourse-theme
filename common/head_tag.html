@@ -15,14 +15,15 @@ var MC_NAV_LINKS = [
   { text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
 ];
 
-// The 'anon' body class disappeared in the 2026 Discourse upgrade; the
-// preloaded data blob only contains currentUser when someone is logged in.
+// The 'anon' body class disappeared in the 2026 Discourse upgrade, and
+// data-preloaded is emptied after boot — the rendered header is the only
+// reliable auth signal: anon shows a login button, logged-in shows #current-user.
+function mcAuthKnown() {
+  return !!(document.getElementById('current-user') ||
+            document.querySelector('.d-header .auth-buttons .login-button'));
+}
 function mcIsAnon() {
-  var el = document.getElementById('data-preloaded');
-  if (el && el.dataset.preloaded) {
-    try { return !JSON.parse(el.dataset.preloaded).currentUser; } catch (e) {}
-  }
-  return document.body.classList.contains('anon');
+  return !document.getElementById('current-user');
 }
 
 function mcBuildNavLinks(navClass, linkClass) {
@@ -41,6 +42,7 @@ function mcBuildNavLinks(navClass, linkClass) {
 }
 
 function addHeaderLinks() {
+  if (!mcAuthKnown()) return; // wait until auth state has rendered
   var panel = document.querySelector('.d-header .panel');
   if (panel && !document.querySelector('.mc-header-nav')) {
     panel.prepend(mcBuildNavLinks('mc-header-nav', 'mc-header-link'));
@@ -49,6 +51,7 @@ function addHeaderLinks() {
 
 // Inject the same links at the top of the mobile slide-in menu
 function addSidenavLinks() {
+  if (!mcAuthKnown()) return;
   var panel = document.querySelector('.menu-panel .panel-body-contents');
   if (panel && !panel.querySelector('.mc-sidenav-links')) {
     panel.prepend(mcBuildNavLinks('mc-sidenav-links', 'mc-sidenav-link'));
