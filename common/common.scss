@@ -142,6 +142,20 @@ h1, h2, h3, h4, h5, h6 {
   .d-header .search-dropdown {
     display: none !important;
   }
+  /* Compact header controls — Register + Log In + header icons must all fit
+     the viewport, otherwise the icon group (incl. language switcher) is pushed
+     off-screen to the right. */
+  .d-header .auth-buttons .btn {
+    padding: 6px 10px !important;
+    font-size: 0.8rem !important;
+  }
+  .d-header .header-buttons {
+    margin-right: 0 !important;
+  }
+  .d-header-icons .header-dropdown-toggle button,
+  .d-header-icons .language-switcher button {
+    padding: 4px 6px !important;
+  }
 }
 /* Hide moved hamburger on desktop, hide sidebar toggle on mobile */
 @media (min-width: 900px) {
@@ -598,6 +612,20 @@ body.mc-homepage-active #main-outlet-wrapper {
   max-width: 1100px !important;
   padding-top: 30px !important;
 }
+/* Mobile: #main-outlet is content-box, so our 20px side padding stacks on top
+   of the full grid-column width plus core's ~11px wrapper padding, pushing the
+   post stream (.container.posts etc.) past the viewport. Count the padding
+   inside the width and drop core's duplicate gutter. */
+@media (max-width: 767px) {
+  #main-outlet-wrapper {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #main-outlet {
+    box-sizing: border-box !important;
+    width: 100% !important;
+  }
+}
 @media (min-width: 768px) {
   #main-outlet {
     padding: 0 0 80px !important;
@@ -698,6 +726,37 @@ textarea,
 .mc-header-link:hover {
   color: #191919 !important;
   -webkit-text-fill-color: #191919 !important;
+}
+
+/* Mobile: Courses/Account live in the slide-in menu instead of the top bar */
+@media (max-width: 899px) {
+  .mc-header-nav {
+    display: none !important;
+  }
+}
+.mc-sidenav-links {
+  display: none;
+  flex-direction: column;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+@media (max-width: 899px) {
+  .mc-sidenav-links {
+    display: flex;
+  }
+}
+.mc-sidenav-link {
+  display: block;
+  padding: 8px 0;
+  background: none !important;
+  color: #191919 !important;
+  -webkit-text-fill-color: #191919 !important;
+  font-weight: 400;
+  font-size: 1rem;
+  text-decoration: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Hide bulk select button */

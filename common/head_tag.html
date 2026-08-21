@@ -9,35 +9,51 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script>
-// Add main site nav links to header
+// Main site nav links — top bar on desktop, slide-in menu (sidenav) on mobile
+var MC_NAV_LINKS = [
+  { text: 'Courses', href: 'https://masterscounter.com/courses' },
+  { text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
+];
+
+function mcBuildNavLinks(navClass, linkClass) {
+  var isAnon = document.body.classList.contains('anon');
+  var nav = document.createElement('div');
+  nav.className = navClass;
+  MC_NAV_LINKS.forEach(function(link) {
+    if (link.authRequired && isAnon) return;
+    var a = document.createElement('a');
+    a.className = linkClass;
+    a.href = link.href;
+    a.textContent = link.text;
+    nav.appendChild(a);
+  });
+  return nav;
+}
+
 function addHeaderLinks() {
   var panel = document.querySelector('.d-header .panel');
   if (panel && !document.querySelector('.mc-header-nav')) {
-    var isAnon = document.body.classList.contains('anon');
-    var nav = document.createElement('div');
-    nav.className = 'mc-header-nav';
-    var links = [
-      { text: 'Courses', href: 'https://masterscounter.com/courses' },
-      { text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
-    ];
-    links.forEach(function(link) {
-      if (link.authRequired && isAnon) return;
-      var a = document.createElement('a');
-      a.className = 'mc-header-link';
-      a.href = link.href;
-      a.textContent = link.text;
-      nav.appendChild(a);
-    });
-    panel.prepend(nav);
+    panel.prepend(mcBuildNavLinks('mc-header-nav', 'mc-header-link'));
   }
 }
+
+// Inject the same links at the top of the mobile slide-in menu
+function addSidenavLinks() {
+  var panel = document.querySelector('.menu-panel .panel-body-contents');
+  if (panel && !panel.querySelector('.mc-sidenav-links')) {
+    panel.prepend(mcBuildNavLinks('mc-sidenav-links', 'mc-sidenav-link'));
+  }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   var observer = new MutationObserver(function() {
     addHeaderLinks();
+    addSidenavLinks();
     addRegisterButton();
   });
   observer.observe(document.body, { childList: true, subtree: true });
   addHeaderLinks();
+  addSidenavLinks();
   addRegisterButton();
 });
 
