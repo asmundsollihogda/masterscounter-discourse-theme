@@ -15,8 +15,18 @@ var MC_NAV_LINKS = [
   { text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
 ];
 
+// The 'anon' body class disappeared in the 2026 Discourse upgrade; the
+// preloaded data blob only contains currentUser when someone is logged in.
+function mcIsAnon() {
+  var el = document.getElementById('data-preloaded');
+  if (el && el.dataset.preloaded) {
+    try { return !JSON.parse(el.dataset.preloaded).currentUser; } catch (e) {}
+  }
+  return document.body.classList.contains('anon');
+}
+
 function mcBuildNavLinks(navClass, linkClass) {
-  var isAnon = document.body.classList.contains('anon');
+  var isAnon = mcIsAnon();
   var nav = document.createElement('div');
   nav.className = navClass;
   MC_NAV_LINKS.forEach(function(link) {
