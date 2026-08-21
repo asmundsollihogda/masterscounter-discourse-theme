@@ -9,10 +9,90 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script>
+// === Theme string localization ===
+// Discourse sets <html lang> per visitor (site locale, user preference, or
+// Accept-Language). Core UI translates itself; these are our own strings.
+// English lives in the markup/code as the fallback.
+var MC_I18N = {
+  ja: {
+    welcome_banner: '初めての方へ：コミュニティマネージャーよりウェルカムメッセージをお届けします！',
+    hero_desc: '鮨を技と文化として探求し、知識や経験を分かち合い、技術を磨く。鮨を愛する方とプロフェッショナルのためのコミュニティです。',
+    read_more: '詳しく見る',
+    search_placeholder: 'トピックを検索…',
+    register: '登録',
+    nav_courses: 'コース',
+    nav_account: 'アカウント',
+    categories: 'カテゴリ',
+    community_activity: 'アクティビティ',
+    tab_latest: '最新',
+    tab_unread: '未読',
+    tab_unanswered: '未回答',
+    th_topic: 'トピック',
+    th_replies: '返信',
+    th_views: '閲覧',
+    th_activity: 'アクティビティ',
+    topics_count: 'トピック数: ',
+    latest_prefix: '最新: ',
+    top_contributors: 'トップ投稿者',
+    posts_label: '投稿',
+    see_all: 'すべて見る',
+    no_topics: 'トピックはまだありません',
+    home: 'ホーム',
+    page_all_activity: 'すべてのアクティビティ',
+    page_new: '新着',
+    page_unread: '未読',
+    page_categories: 'カテゴリ',
+    cta_text: '質問や経験をみんなと共有してみませんか？',
+    cta_button: '新しいトピックを作成',
+    footer_courses: 'コース',
+    footer_community: 'コミュニティ',
+    footer_about: 'インフォメーション',
+    footer_legal: '法的情報',
+    footer_categories: 'カテゴリ',
+    footer_latest: '最新',
+    footer_terms: '利用規約',
+    footer_privacy: 'プライバシーポリシー',
+    footer_refund: '返金ポリシー',
+    min_suffix: '分',
+    hour_suffix: '時間',
+    day_suffix: '日'
+  }
+};
+
+function mcLocale() {
+  var lang = (document.documentElement.lang || '').toLowerCase();
+  return lang.indexOf('ja') === 0 ? 'ja' : 'en';
+}
+
+function mcT(key, fallback) {
+  var dict = MC_I18N[mcLocale()];
+  return (dict && dict[key]) || fallback;
+}
+
+// Translate static theme HTML (hero, welcome banner, CTA, footer) via
+// data-mc-t / data-mc-t-placeholder attributes. Idempotent.
+function mcApplyStaticI18n() {
+  if (mcLocale() === 'en') return;
+  document.querySelectorAll('[data-mc-t]').forEach(function(el) {
+    if (el.dataset.mcTDone) return;
+    var t = mcT(el.dataset.mcT, null);
+    if (t) { el.textContent = t; el.dataset.mcTDone = '1'; }
+  });
+  document.querySelectorAll('[data-mc-t-placeholder]').forEach(function(el) {
+    if (el.dataset.mcTDone) return;
+    var t = mcT(el.dataset.mcTPlaceholder, null);
+    if (t) { el.setAttribute('placeholder', t); el.dataset.mcTDone = '1'; }
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  mcApplyStaticI18n();
+  new MutationObserver(mcApplyStaticI18n).observe(document.body, { childList: true, subtree: true });
+});
+
 // Main site nav links — top bar on desktop, slide-in menu (sidenav) on mobile
 var MC_NAV_LINKS = [
-  { text: 'Courses', href: 'https://masterscounter.com/courses' },
-  { text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
+  { key: 'nav_courses', text: 'Courses', href: 'https://masterscounter.com/courses' },
+  { key: 'nav_account', text: 'Account', href: 'https://masterscounter.com/account', authRequired: true }
 ];
 
 // The 'anon' body class disappeared in the 2026 Discourse upgrade, and
@@ -35,7 +115,7 @@ function mcBuildNavLinks(navClass, linkClass) {
     var a = document.createElement('a');
     a.className = linkClass;
     a.href = link.href;
-    a.textContent = link.text;
+    a.textContent = mcT(link.key, link.text);
     nav.appendChild(a);
   });
   return nav;
@@ -79,7 +159,7 @@ function addRegisterButton() {
   var btn = document.createElement('button');
   btn.className = 'btn btn-primary mc-register-button';
   btn.type = 'button';
-  btn.textContent = 'Register';
+  btn.textContent = mcT('register', 'Register');
   btn.addEventListener('click', function(e) {
     e.preventDefault();
     loginBtn.click();
@@ -175,11 +255,11 @@ function mcIsHomepage() {
 function mcTimeAgo(dateStr) {
   var diff = Date.now() - new Date(dateStr).getTime();
   var mins = Math.floor(diff / 60000);
-  if (mins < 60) return mins + 'm';
+  if (mins < 60) return mins + mcT('min_suffix', 'm');
   var hours = Math.floor(mins / 60);
-  if (hours < 24) return hours + 'h';
+  if (hours < 24) return hours + mcT('hour_suffix', 'h');
   var days = Math.floor(hours / 24);
-  return days + 'd';
+  return days + mcT('day_suffix', 'd');
 }
 
 function mcBuildFeaturedTopics(topics) {
@@ -212,13 +292,13 @@ function mcBuildCategories(categories) {
     }
     return '<a href="/c/' + c.slug + '/' + c.id + '" class="mc-categories__item">' +
       '<div class="mc-categories__name">' + c.name + '</div>' +
-      '<div class="mc-categories__count">Topics: ' + c.topic_count + '</div>' +
-      (latestTitle ? '<div class="mc-categories__latest">Latest: <strong>' + latestTitle + '</strong></div>' : '') +
+      '<div class="mc-categories__count">' + mcT('topics_count', 'Topics: ') + c.topic_count + '</div>' +
+      (latestTitle ? '<div class="mc-categories__latest">' + mcT('latest_prefix', 'Latest: ') + '<strong>' + latestTitle + '</strong></div>' : '') +
     '</a>';
   }).join('');
 
   return '<div class="mc-categories">' +
-    '<h2 class="mc-section-title">Categories</h2>' +
+    '<h2 class="mc-section-title">' + mcT('categories', 'Categories') + '</h2>' +
     items +
   '</div>';
 }
@@ -247,19 +327,19 @@ function mcBuildActivity(topics, users) {
   }).join('');
 
   return '<div class="mc-activity">' +
-    '<h2 class="mc-section-title">Community activity</h2>' +
+    '<h2 class="mc-section-title">' + mcT('community_activity', 'Community activity') + '</h2>' +
     '<div class="mc-activity__tabs">' +
-      '<button class="mc-activity__tab mc-activity__tab--active" data-tab="latest">Latest</button>' +
-      '<button class="mc-activity__tab" data-tab="unread">Unread</button>' +
-      '<button class="mc-activity__tab" data-tab="unanswered">Unanswered</button>' +
+      '<button class="mc-activity__tab mc-activity__tab--active" data-tab="latest">' + mcT('tab_latest', 'Latest') + '</button>' +
+      '<button class="mc-activity__tab" data-tab="unread">' + mcT('tab_unread', 'Unread') + '</button>' +
+      '<button class="mc-activity__tab" data-tab="unanswered">' + mcT('tab_unanswered', 'Unanswered') + '</button>' +
     '</div>' +
     '<table class="mc-activity__table">' +
       '<thead><tr>' +
-        '<th>Topic</th><th>Replies</th><th>Views</th><th>Activity</th>' +
+        '<th>' + mcT('th_topic', 'Topic') + '</th><th>' + mcT('th_replies', 'Replies') + '</th><th>' + mcT('th_views', 'Views') + '</th><th>' + mcT('th_activity', 'Activity') + '</th>' +
       '</tr></thead>' +
       '<tbody id="mc-activity-body">' + rows + '</tbody>' +
     '</table>' +
-    '<div class="mc-activity__seeall"><a href="/latest">See all</a></div>' +
+    '<div class="mc-activity__seeall"><a href="/latest">' + mcT('see_all', 'See all') + '</a></div>' +
   '</div>';
 }
 
@@ -285,13 +365,13 @@ function mcBuildContributors(directoryItems) {
       '</div>' +
       '<div class="mc-contributors__posts">' +
         '<span class="mc-contributors__posts-num">' + total + '</span>' +
-        '<span class="mc-contributors__posts-label">Posts</span>' +
+        '<span class="mc-contributors__posts-label">' + mcT('posts_label', 'Posts') + '</span>' +
       '</div>' +
     '</div>';
   }).join('');
 
   return '<div class="mc-contributors">' +
-    '<h2 class="mc-section-title">Top Contributors</h2>' +
+    '<h2 class="mc-section-title">' + mcT('top_contributors', 'Top Contributors') + '</h2>' +
     items +
   '</div>';
 }
@@ -389,7 +469,7 @@ function mcLoadActivityTab(tabName) {
       }).join('');
 
       if (rows === '') {
-        rows = '<tr><td colspan="4" class="mc-activity__empty">No topics yet</td></tr>';
+        rows = '<tr><td colspan="4" class="mc-activity__empty">' + mcT('no_topics', 'No topics yet') + '</td></tr>';
       }
 
       var tbody = document.getElementById('mc-activity-body');
@@ -572,7 +652,7 @@ function mcBuildTopicHero() {
       });
   }
 
-  var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">Home</a>';
+  var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">' + mcT('home', 'Home') + '</a>';
   crumbs.forEach(function(c) {
     crumbHtml += '<span class="mc-topic-hero__crumb-sep">,</span>';
     crumbHtml += c.href
@@ -599,15 +679,16 @@ function mcBuildTopicHero() {
 }
 
 var MC_LIST_PAGES = {
-  '/latest': 'All activity',
-  '/new': 'New',
-  '/unread': 'Unread',
-  '/categories': 'Categories'
+  '/latest': { key: 'page_all_activity', text: 'All activity' },
+  '/new': { key: 'page_new', text: 'New' },
+  '/unread': { key: 'page_unread', text: 'Unread' },
+  '/categories': { key: 'page_categories', text: 'Categories' }
 };
 
 function mcCurrentListTitle() {
   var path = window.location.pathname.replace(/\/$/, '');
-  return MC_LIST_PAGES[path] || null;
+  var entry = MC_LIST_PAGES[path];
+  return entry ? mcT(entry.key, entry.text) : null;
 }
 
 function mcBuildLatestHero() {
@@ -621,7 +702,7 @@ function mcBuildLatestHero() {
   if (existing) existing.remove();
 
   var crumbHtml =
-    '<a href="/" class="mc-topic-hero__crumb">Home</a>' +
+    '<a href="/" class="mc-topic-hero__crumb">' + mcT('home', 'Home') + '</a>' +
     '<span class="mc-topic-hero__crumb-sep">,</span>' +
     '<span class="mc-topic-hero__crumb">' + title + '</span>';
 
@@ -698,7 +779,7 @@ function mcBuildCategoryHero() {
     }
     crumbs.push({ name: cat.name, href: null });
 
-    var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">Home</a>';
+    var crumbHtml = '<a href="/" class="mc-topic-hero__crumb">' + mcT('home', 'Home') + '</a>';
     crumbs.forEach(function(c) {
       crumbHtml += '<span class="mc-topic-hero__crumb-sep">,</span>';
       crumbHtml += c.href
