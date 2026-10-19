@@ -212,10 +212,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (welcomeBanner) welcomeBanner.style.display = 'none';
         if (homepage) homepage.style.display = 'none';
       }
+      mcLayoutReady();
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
+  // Fallback so content is never held back if the banner move doesn't happen
+  setTimeout(mcLayoutReady, 3000);
 });
+
+// Releases the footer and main content held back in common.scss (avoids layout shift on load)
+function mcLayoutReady() {
+  document.documentElement.classList.add('mc-layout-ready');
+}
 
 // Dismiss welcome banner — check localStorage + wire up close button
 document.addEventListener('DOMContentLoaded', function() {
