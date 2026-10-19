@@ -1393,7 +1393,8 @@ a.mc-topic-hero__crumb:hover {
    The banners start inside #main-outlet-wrapper and are moved above it by JS, and the footer sits
    right under an empty page until Ember renders. Hold both back until mcLayoutReady() in head_tag.html
    (3s fallback), and reserve height for the homepage while its API content loads. */
-html:not(.mc-layout-ready) .mc-footer {
+html:not(.mc-layout-ready) .mc-footer,
+html:not(.mc-layout-ready) .mc-cta {
   display: none;
 }
 html:not(.mc-layout-ready) #main-outlet-wrapper {
